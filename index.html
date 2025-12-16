@@ -433,7 +433,7 @@
     // --- CẤU HÌNH LIÊN KẾT GOOGLE SHEET ---
     const API_URL = "https://script.google.com/macros/s/AKfycbwzHLsHtPYpRFlhOBZ45HCa9sw4ii2CU5yLPW5koBUomjYE--bs7LDui1a8LF-bjNJ2/exec"; 
 
-    // --- CẤU HÌNH DANH SÁCH TỈNH THÀNH & TỪ CẤM ---
+    // --- CẤU HÌNH DANH SÁCH TỈNH THÀNH ---
     const LIST_PROVINCES = [
         "Thành phố Hà Nội", "Thành phố Hồ Chí Minh", "Thành phố Hải Phòng", "Thành phố Đà Nẵng", "Thành phố Cần Thơ",
         "Tỉnh Hà Giang", "Tỉnh Cao Bằng", "Tỉnh Lai Châu", "Tỉnh Lào Cai", "Tỉnh Tuyên Quang", "Tỉnh Lạng Sơn", "Tỉnh Thái Nguyên", "Tỉnh Sơn La", "Tỉnh Phú Thọ", "Tỉnh Quảng Ninh", "Tỉnh Bắc Ninh",
@@ -443,7 +443,21 @@
         "Tỉnh Cà Mau", "Tỉnh Điện Biên", "Tỉnh Vĩnh Long", "Tỉnh Lâm Đồng"
     ];
 
-    const BAD_WORDS_LIST = ["địt", "đụ", "lồn", "cặc", "buồi", "mẹ mày", "con chó", "thằng chó", "ngu", "óc chó", "điếm", "phò", "đĩ", "vãi", "vcl", "vl", "đm", "dm", "dkm", "vkl", "chết", "giết", "đéo", "fuck", "shit", "mày tao", "chửi", "cút"];
+    // --- DANH SÁCH TỪ CẤM NÂNG CAO (GỒM XÚC PHẠM, GIA ĐÌNH, TÌNH DỤC, BẠO LỰC) ---
+    const BAD_WORDS_LIST = [
+        // 1. Tục tĩu / Tình dục / Bộ phận nhạy cảm
+        "địt", "đụ", "lồn", "cặc", "buồi", "dái", "vú", "bướm", "khe", "mông", "háng", "chịch", "xoạc", "thủ dâm", "quay tay", "thẩm du", "biến thái", "dâm", 
+        // 2. Xúc phạm gia đình
+        "mẹ mày", "bố mày", "cha mày", "bà mày", "tổ sư", "dòng họ mày", "cả lò", "bàn thờ", "mả cha", 
+        // 3. Xúc phạm cá nhân / Động vật
+        "thằng chó", "con chó", "chó đẻ", "súc sinh", "súc vật", "ngu", "óc chó", "óc lợn", "đần độn", "thiểu năng", "khùng", "điên", "thần kinh", "điếm", "phò", "đĩ", "cave", "hãm", "mất dạy", "vô học",
+        // 4. Các từ đệm thô tục viết tắt
+        "vãi", "vcl", "vl", "đm", "dm", "dkm", "vkl", "đéo", "bố láo", "mày tao", "cút", "xéo",
+        // 5. Đe dọa / Bạo lực
+        "giết", "chém", "đánh chết", "đâm chết", "bắn bỏ", "xử đẹp", 
+        // 6. Tiếng Anh thô tục (English Profanity)
+        "fuck", "shit", "bitch", "bastard", "asshole", "damn", "whore", "cunt", "pussy", "dick", "cock", "suck", "stupid", "idiot", "kill", "die"
+    ];
 
     // --- CÁC HÀM XỬ LÝ VĂN BẢN ---
 
@@ -474,7 +488,22 @@
         return BAD_WORDS_LIST.some(word => textCheck.includes(word));
     }
     
-    // 4. Khởi tạo danh sách tỉnh thành
+    // 4. Hàm bỏ dấu tiếng Việt & chuyển thường (Dùng cho tìm kiếm không phân biệt hoa thường)
+    function removeVietnameseTones(str) {
+        if(!str) return "";
+        str = str.replace(/à|á|ạ|ả|ã|â|ầ|ấ|ậ|ẩ|ẫ|ă|ằ|ắ|ặ|ẳ|ẵ/g,"a"); 
+        str = str.replace(/è|é|ẹ|ẻ|ẽ|ê|ề|ế|ệ|ể|ễ/g,"e"); 
+        str = str.replace(/ì|í|ị|ỉ|ĩ/g,"i"); 
+        str = str.replace(/ò|ó|ọ|ỏ|õ|ô|ồ|ố|ộ|ổ|ỗ|ơ|ờ|ớ|ợ|ở|ỡ/g,"o"); 
+        str = str.replace(/ù|ú|ụ|ủ|ũ|ư|ừ|ứ|ự|ử|ữ/g,"u"); 
+        str = str.replace(/ỳ|ý|ỵ|ỷ|ỹ/g,"y"); 
+        str = str.replace(/đ/g,"d");
+        str = str.replace(/\u0300|\u0301|\u0303|\u0309|\u0323/g, ""); 
+        str = str.replace(/\u02C6|\u0306|\u031B/g, ""); 
+        return str.toLowerCase(); // Quan trọng: luôn trả về chữ thường
+    }
+
+    // 5. Khởi tạo danh sách tỉnh thành
     function initProvinces() {
         const select = document.getElementById('inp-loc');
         select.innerHTML = '<option value="" disabled selected>Chọn Tỉnh/Thành...</option>';
@@ -519,19 +548,6 @@
             const res = await fetch(url, options);
             return await res.json();
         } catch (e) { console.error("API Error:", e); throw e; }
-    }
-
-    function removeVietnameseTones(str) {
-        str = str.replace(/à|á|ạ|ả|ã|â|ầ|ấ|ậ|ẩ|ẫ|ă|ằ|ắ|ặ|ẳ|ẵ/g,"a"); 
-        str = str.replace(/è|é|ẹ|ẻ|ẽ|ê|ề|ế|ệ|ể|ễ/g,"e"); 
-        str = str.replace(/ì|í|ị|ỉ|ĩ/g,"i"); 
-        str = str.replace(/ò|ó|ọ|ỏ|õ|ô|ồ|ố|ộ|ổ|ỗ|ơ|ờ|ớ|ợ|ở|ỡ/g,"o"); 
-        str = str.replace(/ù|ú|ụ|ủ|ũ|ư|ừ|ứ|ự|ử|ữ/g,"u"); 
-        str = str.replace(/ỳ|ý|ỵ|ỷ|ỹ/g,"y"); 
-        str = str.replace(/đ/g,"d");
-        str = str.replace(/\u0300|\u0301|\u0303|\u0309|\u0323/g, ""); 
-        str = str.replace(/\u02C6|\u0306|\u031B/g, ""); 
-        return str.toLowerCase();
     }
 
     window.onload = () => { 
@@ -623,14 +639,18 @@
         render(filtered, 'full-feed'); 
     }
 
+    // --- HÀM TÌM KIẾM ĐÃ CẬP NHẬT (HỖ TRỢ HOA/THƯỜNG) ---
     function filterLibrary() {
+        // Lấy giá trị input và chuẩn hóa (bỏ dấu + chuyển thành chữ thường)
         const nameVal = removeVietnameseTones(document.getElementById('search-name').value);
         const provVal = removeVietnameseTones(document.getElementById('search-prov').value);
         const toVal = document.getElementById('search-to').value; 
         
         let result = posts.filter(p => {
-            const matchesName = removeVietnameseTones(p.hoten).includes(nameVal);
-            const matchesProv = removeVietnameseTones(p.tinhthanh).includes(provVal);
+            // Chuẩn hóa dữ liệu trong bài viết trước khi so sánh
+            // (Thêm || "" để tránh lỗi nếu dữ liệu trống)
+            const matchesName = removeVietnameseTones(p.hoten || "").includes(nameVal);
+            const matchesProv = removeVietnameseTones(p.tinhthanh || "").includes(provVal);
             let matchesTo = true;
             if (toVal) {
                 if(toVal === "Trường Sa") matchesTo = p.nguoinhan.includes("Trường Sa") || p.nguoinhan.includes("DK1");
@@ -657,72 +677,54 @@
         if(posts.length) show('feed-screen'); else goHome();
     }
 
+    // --- HÀM XỬ LÝ MEDIA (SANDBOX - CHẶN TAB MỚI) ---
     function getMedia(p, isDetail = false) {
         let html = '';
-        
-        // Hàm lấy ID từ link Google Drive
-        const getDriveId = (link) => { 
-            if(!link) return null; 
-            const m = link.match(/[-\w]{25,}/); 
-            return m ? m[0] : null; 
-        };
-
-        // Hàm lấy ID Youtube (Hỗ trợ cả Shorts, Link mobile, Link web)
+        const getDriveId = (link) => { if(!link) return null; const m = link.match(/[-\w]{25,}/); return m ? m[0] : null; };
         const getYtId = (link) => {
             if(!link) return null;
             const regExp = /^(?:https?:\/\/)?(?:www\.|m\.)?(?:youtu\.be\/|youtube\.com\/(?:embed\/|v\/|watch\?v=|watch\?.+&v=|shorts\/))((\w|-){11})(?:\S+)?$/;
             const match = link.match(regExp);
             return (match && match[1]) ? match[1] : null;
         }
-        
-        // 1. ƯU TIÊN KIỂM TRA LINK VIDEO (Youtube/Drive dán vào ô Link Video)
+        const sandboxAttr = 'sandbox="allow-scripts allow-same-origin allow-presentation"';
+
         if(p.videoLink) {
             const ytId = getYtId(p.videoLink);
             const driveId = getDriveId(p.videoLink);
-
             if(ytId) {
-                // Youtube
                 html = `<div class="video-container" onclick="event.stopPropagation()">
-                            <iframe src="https://www.youtube.com/embed/${ytId}?rel=0&modestbranding=1&playsinline=1" allowfullscreen></iframe>
+                            <iframe src="https://www.youtube.com/embed/${ytId}?rel=0&modestbranding=1&playsinline=1&iv_load_policy=3&fs=0" 
+                            ${sandboxAttr} allowfullscreen></iframe>
                         </div>`;
             } else if (driveId) {
-                // Drive Link
                 html = `<div class="video-container" onclick="event.stopPropagation()">
-                            <iframe src="https://drive.google.com/file/d/${driveId}/preview" allowfullscreen></iframe>
+                            <iframe src="https://drive.google.com/file/d/${driveId}/preview" 
+                            ${sandboxAttr} allowfullscreen></iframe>
                         </div>`;
             }
-        } 
-        // 2. NẾU KHÔNG CÓ LINK VIDEO -> KIỂM TRA FILE UPLOAD (ẢNH HOẶC VIDEO)
-        else if(p.linkfile) {
+        } else if(p.linkfile) {
              const id = getDriveId(p.linkfile);
              if(id) {
-                // Kiểm tra loại file dựa trên dữ liệu Google Sheet trả về (p.loaifile)
                 const isImage = p.loaifile && p.loaifile.toLowerCase().includes('image');
                 const isVideo = p.loaifile && p.loaifile.toLowerCase().includes('video');
-                
                 if (isVideo) {
-                    // NẾU LÀ VIDEO TẢI LÊN
                     html = `<div class="video-container" onclick="event.stopPropagation()">
-                                <iframe src="https://drive.google.com/file/d/${id}/preview" allowfullscreen></iframe>
+                                <iframe src="https://drive.google.com/file/d/${id}/preview" 
+                                ${sandboxAttr} allowfullscreen></iframe>
                             </div>`;
                 } else if (isImage) {
-                    // NẾU LÀ ẢNH
                     if(isDetail) {
                         html = `<div class="detail-image-box mb-3"><img src="https://drive.google.com/thumbnail?id=${id}&sz=w1600"></div>`;
                     } else {
                         html = `<div class="media-box"><img src="https://drive.google.com/thumbnail?id=${id}&sz=w800" style="width:100%; object-fit:cover; max-height:200px"></div>`;
                     }
                 } else if (isDetail) {
-                    // PDF (chỉ hiện ở trang chi tiết)
-                    html = `<div class="pdf-container mb-3"><iframe src="https://drive.google.com/file/d/${id}/preview" allow="autoplay"></iframe></div>`;
+                    html = `<div class="pdf-container mb-3"><iframe src="https://drive.google.com/file/d/${id}/preview" ${sandboxAttr}></iframe></div>`;
                 }
              }
         }
-        
-        // Tinh chỉnh margin cho trang chi tiết
-        if(isDetail && html.includes('video-container')) {
-            html = html.replace('video-container', 'video-container mb-4');
-        }
+        if(isDetail && html.includes('video-container')) { html = html.replace('video-container', 'video-container mb-4'); }
         return html;
     }
 
@@ -793,9 +795,9 @@
         const c = document.getElementById('c-text').value;
         if(!n || !c) return showNotify('Vui lòng nhập đủ tên và nội dung!');
         
-        // KIỂM TRA TỪ CẤM TRONG COMMENT
+        // --- KIỂM TRA TỪ CẤM NÂNG CAO ---
         if (containsBadWords(n) || containsBadWords(c)) {
-            return showNotify("Nội dung bình luận chứa từ ngữ không phù hợp.", "error");
+            return showNotify("CẢNH BÁO: Nội dung bình luận chứa từ ngữ thô tục, xúc phạm hoặc bạo lực. Vui lòng sử dụng ngôn từ văn minh!", "error");
         }
         
         n = standardizeName(n);
@@ -824,9 +826,10 @@
                 return; 
             }
 
+            // --- KIỂM TRA TỪ CẤM TRONG THƯ ---
             if (containsBadWords(rawHoten) || containsBadWords(rawNoidung) || containsBadWords(rawTruonglop)) {
                 b.innerHTML = old; b.disabled = false;
-                return showNotify("Phát hiện từ ngữ không phù hợp trong thư. Hãy sử dụng ngôn từ văn minh!", "error");
+                return showNotify("Phát hiện từ ngữ thô tục hoặc không phù hợp trong nội dung thư. Vui lòng kiểm tra lại!", "error");
             }
 
             const d = { 
