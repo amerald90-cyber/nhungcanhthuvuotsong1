@@ -202,14 +202,14 @@
     }
     .map-hotspot {
         position: absolute;
-        width: 4%; /* Độ rộng điểm chạm */
-        height: 4%; /* Độ cao điểm chạm */
-        background: rgba(255, 0, 0, 0.0); /* Trong suốt để không che ảnh, đổi thành 0.3 để test vị trí */
+        width: 8%; /* ĐÃ TĂNG: Từ 4% lên 8% để dễ bấm hơn */
+        height: 8%; /* ĐÃ TĂNG: Từ 4% lên 8% để dễ bấm hơn */
+        background: rgba(255, 0, 0, 0.0); /* Vẫn giữ trong suốt */
         border-radius: 50%;
         cursor: pointer;
         z-index: 10;
         transition: transform 0.2s, background 0.2s;
-        transform: translate(-50%, -50%); /* Căn giữa điểm */
+        transform: translate(-50%, -50%); /* Giữ nguyên tâm điểm để không bị lệch vị trí đảo */
     }
     .map-hotspot:hover {
         transform: translate(-50%, -50%) scale(1.5);
@@ -218,27 +218,28 @@
     }
     
     /* Vị trí các đảo (Cần điều chỉnh thủ công nếu chưa khớp 100%) */
-    #spot-songtutay { top: 25%; left: 66%; }
-    #spot-danam { top: 31%; left: 63%; }
-    #spot-sonca { top: 36%; left: 75%; }
-    #spot-namyet { top: 43%; left: 72%; }
-    #spot-sinhton { top: 48%; left: 67%; }
+    #spot-songtutay { top: 25%; left: 69%; }
+    #spot-danam { top: 32%; left: 64%; }
+    #spot-sonca { top: 32%; left: 77%; }
+    #spot-dathi { top: 30%; left: 85%; }  
+    #spot-namyet { top: 40%; left: 77%; }
+    #spot-sinhton { top: 48%; left: 68%; }
     #spot-sinhtondong { top: 49%; left: 81%; }
     #spot-colin { top: 55%; left: 64%; }
-    #spot-lendao { top: 56%; left: 74%; }
+    #spot-lendao { top: 55%; left: 75%; }
     #spot-gacma { top: 57%; left: 62%; } 
     #spot-tiemnu { top: 67%; left: 88%; }
-    #spot-toc-tan { top: 62%; left: 81%; }
-    #spot-nuile { top: 68%; left: 77%; }
-    #spot-truongsa { top: 70%; left: 35%; }
-    #spot-truongsaddong { top: 60%; left: 45%; }
-    #spot-dadong { top: 59%; left: 52%; }
-    #spot-datay { top: 63%; left: 50%; }
+    #spot-toc-tan { top: 61%; left: 82%; }
+    #spot-nuile { top: 68%; left: 78%; }
+    #spot-truongsa { top: 70%; left: 36%; }
+    #spot-truongsaddong { top: 58%; left: 38%; }
+    #spot-dadong { top: 64%; left: 49%; }
+    #spot-datay { top: 58%; left: 52%; }
     #spot-dalat { top: 67%; left: 26%; }
     #spot-thuyenchai { top: 73%; left: 53%; }
-    #spot-anbang { top: 78%; left: 49%; }
-    #spot-phanvinh { top: 67%; left: 66%; }
-    #spot-dalon { top: 42%; left: 56%; }
+    #spot-anbang { top: 78%; left: 50%; }
+    #spot-phanvinh { top: 67%; left: 67%; }
+    #spot-dalon { top: 41%; left: 56%; }
 
     /* Modal Video Đảo - ĐÃ CHỈNH SỬA SANG MÀU SÁNG */
     .island-modal-body {
@@ -320,6 +321,20 @@
     }
     .back-btn-float:hover { transform: scale(1.1); background: var(--primary); }
 
+    /* --- CSS CHO NÚT NHẠC (MỚI) --- */
+    #music-btn.playing {
+        background: var(--primary);
+        color: white;
+        animation: musicPulse 1.5s infinite;
+        box-shadow: 0 0 15px var(--accent);
+        border: 1px solid white;
+    }
+    @keyframes musicPulse {
+        0% { transform: scale(1); box-shadow: 0 0 0 0 rgba(0, 210, 255, 0.7); }
+        70% { transform: scale(1.1); box-shadow: 0 0 0 10px rgba(0, 210, 255, 0); }
+        100% { transform: scale(1); box-shadow: 0 0 0 0 rgba(0, 210, 255, 0); }
+    }
+
   </style>
 </head>
 <body>
@@ -369,6 +384,16 @@
             </ul>
           </li>
           <li class="nav-item"><a class="nav-link" onclick="showAbout()">Hành trình số</a></li>
+          
+          <!-- THÊM NÚT NHẠC VÀO ĐÂY -->
+          <li class="nav-item">
+            <div class="nav-search-btn me-2" id="music-btn" onclick="toggleMusic()" style="display:none;" title="Bật/Tắt Nhạc">
+                <i class="fas fa-music"></i>
+            </div>
+            <!-- Trình phát nhạc ẩn -->
+            <div id="hidden-player" style="position: fixed; top: -9999px; left: -9999px; visibility: hidden;"></div>
+          </li>
+          
           <li class="nav-item"><div class="nav-search-btn" onclick="openSearch()" title="Tìm kiếm"><i class="fas fa-search"></i></div></li>
           <li class="nav-item ms-3"><button class="btn btn-primary rounded-pill fw-bold px-4 shadow-sm" style="background: var(--primary); border:none; padding: 8px 20px; font-size: 0.9rem" onclick="showForm()"><i class="fas fa-pen me-2"></i>Viết thư</button></li>
         </ul>
@@ -500,6 +525,7 @@
               <div class="map-hotspot" id="spot-songtutay" title="Đảo Song Tử Tây" onclick="openIslandVideo('Song Tu Tay')"></div>
               <div class="map-hotspot" id="spot-danam" title="Đảo Đá Nam" onclick="openIslandVideo('Da Nam')"></div>
               <div class="map-hotspot" id="spot-sonca" title="Đảo Sơn Ca" onclick="openIslandVideo('Son Ca')"></div>
+              <div class="map-hotspot" id="spot-dathi" title="Đảo Đá Thị" onclick="openIslandVideo('Da Thi')"></div> <!-- MỚI THÊM -->
               <div class="map-hotspot" id="spot-namyet" title="Đảo Nam Yết" onclick="openIslandVideo('Nam Yet')"></div>
               <div class="map-hotspot" id="spot-sinhton" title="Đảo Sinh Tồn" onclick="openIslandVideo('Sinh Ton')"></div>
               <div class="map-hotspot" id="spot-sinhtondong" title="Đảo Sinh Tồn Đông" onclick="openIslandVideo('Sinh Ton Dong')"></div>
@@ -735,7 +761,8 @@
 
     const BAD_WORDS_LIST = ["địt", "đụ", "lồn", "cặc", "buồi", "mẹ mày", "con chó", "thằng chó", "ngu", "óc chó", "điếm", "phò", "đĩ", "vãi", "vcl", "vl", "đm", "dm", "dkm", "vkl", "chết", "giết", "đéo", "fuck", "shit", "mày tao", "chửi", "cút", "biến", "chém", "chúng mày", "sex"];
 
-    // DANH SÁCH TỪ KHÓA ĐẢO
+    // DANH SÁCH TỪ KHÓA ĐỂ NHẬN DIỆN BÀI VIẾT LÀ CỦA BẢN ĐỒ
+    // (Lưu ý: Nếu tên trường/lớp chứa từ khóa này, bài viết sẽ BỊ ẨN khỏi trang chủ và chỉ hiện trên bản đồ)
     const ISLAND_KEYWORDS = {
         "song tu tay": "Song Tu Tay",
         "da nam": "Da Nam",
@@ -760,7 +787,7 @@
         "da lon": "Da Lon"
     };
 
-    // TỪ ĐIỂN TÊN ĐẢO TIẾNG VIỆT
+    // TỪ ĐIỂN HIỂN THỊ TÊN ĐẢO TIẾNG VIỆT CÓ DẤU
     const ISLAND_NAMES_VN = {
         "Song Tu Tay": "Song Tử Tây",
         "Da Nam": "Đá Nam",
@@ -852,16 +879,25 @@
     let cardRotations = {};
 
     const successMessages = [
-        "Cháu yêu quý, giữa bao la biển trời, từng dòng chữ của cháu như một làn gió mới mang theo hơi thở ấm áp của đất liền...",
-        "Giữa mênh mông sóng nước, nhận được lời nhắn gửi của cháu, chú bỗng thấy khoảng cách ngàn dặm như tan biến...",
-        "Cháu thân yêu, lá thư nhỏ bé cháu gửi đã vượt ngàn con sóng dữ để đến tận tay chú...",
-        "Cháu yêu quý, những lời cháu viết như những cánh hoa biển rực rỡ nhất nở giữa trùng khơi khô cằn...",
-        "Giữa tiếng sóng ngày đêm không ngừng vỗ, lá thư ngắn của cháu như một bản tình ca êm dịu làm vơi đi nỗi nhớ nhà...",
-        "Cháu thân yêu, lá thư nhỏ bé nhưng chứa đựng tình cảm lớn lao tựa như đại dương bao la ngoài kia...",
-        "Cháu yêu quý, trong từng nét chữ của cháu, thấy được niềm tin yêu trong sáng và lòng tự hào dân tộc đang lớn dần...",
-        "Giữa biển khơi xanh thẳm, lời nhắn gửi của cháu đến với chú như cánh chim hải âu mang tin vui về tổ ấm...",
-        "Cháu thân yêu, đọc những dòng chữ trong trẻo của cháu, chú dường như ngửi thấy mùi hương lúa mới...",
-        "Cháu yêu quý, những lời chúc và sự quan tâm của cháu là món quà quý giá hơn bất kỳ châu báu nào dưới đáy đại dương..."
+        "Cháu yêu quý, giữa bao la biển trời, từng dòng chữ của cháu như một làn gió mới mang theo hơi thở ấm áp của đất liền thổi vào tâm hồn chú. Ở nơi đầu sóng ngọn gió này, khi xung quanh chỉ có nắng cháy và vị mặn mòi của biển, sự quan tâm ngây thơ của cháu chính là nguồn nước mát lành nhất, tiếp thêm sức mạnh để chú chắc tay súng bảo vệ bình yên cho Tổ quốc.",
+  
+  "Giữa mênh mông sóng nước, nhận được lời nhắn gửi của cháu, chú bỗng thấy khoảng cách ngàn dặm như tan biến. Tiếng sóng vỗ ầm ĩ ngoài kia dường như cũng dịu lại, nhường chỗ cho những nốt nhạc vui tươi nhảy múa trong lòng chú khi đọc thư cháu. Cháu hãy yên tâm học tập thật tốt nhé, vì ngoài này đã có các chú canh giữ biển trời.",
+  
+  "Cháu thân yêu, lá thư nhỏ bé cháu gửi đã vượt ngàn con sóng dữ để đến tận tay chú, mang theo cả tình cảm thiêng liêng của hậu phương. Cầm lá thư trên tay, chú thấy như đang được nắm lấy bàn tay nhỏ bé của cháu, thấy được hình ảnh mái trường, con đường làng và những nụ cười bình yên mà các chú đang ngày đêm gìn giữ.",
+  
+  "Cháu yêu quý, những lời cháu viết như những cánh hoa biển rực rỡ nhất nở giữa trùng khơi khô cằn. Nó nhắc nhở chú về lý do vì sao mình lại đứng ở đây, kiên cường dưới nắng gió khắc nghiệt: đó là để bảo vệ những ước mơ xanh và tương lai rạng ngời của những mầm non như cháu.",
+  
+  "Giữa tiếng sóng ngày đêm không ngừng vỗ, lá thư ngắn của cháu như một bản tình ca êm dịu làm vơi đi nỗi nhớ nhà. Chú hứa sẽ là ngọn hải đăng vững chãi nhất, không ngại gian khó, không ngại hy sinh, để cháu và mọi người ở đất liền luôn có những giấc ngủ ngon và những ngày vui trọn vẹn.",
+  
+  "Cháu thân yêu, lá thư nhỏ bé nhưng chứa đựng tình cảm lớn lao tựa như đại dương bao la ngoài kia. Mỗi nét chữ của cháu là một lời động viên, nhắc nhở chú rằng dù ở nơi đảo xa hẻo lánh, chú không bao giờ cô đơn vì luôn có những trái tim bé nhỏ ở đất liền hướng về.",
+  
+  "Cháu yêu quý, trong từng nét chữ của cháu, chú thấy được niềm tin yêu trong sáng và lòng tự hào dân tộc đang lớn dần. Hãy nuôi dưỡng ước mơ ấy cháu nhé! Chú sẽ gom những ánh sao trời đẹp nhất trên biển đêm nay để gửi vào trong giấc mơ của cháu.",
+  
+  "Giữa biển khơi xanh thẳm, lời nhắn gửi của cháu đến với chú như cánh chim hải âu mang tin vui về tổ ấm. Cháu biết không, chính sự hồn nhiên và chăm ngoan của cháu là hậu phương vững chắc nhất, giúp các chú vượt qua mọi bão tố phong ba để hoàn thành nhiệm vụ.",
+  
+  "Cháu thân yêu, đọc những dòng chữ trong trẻo của cháu, chú dường như ngửi thấy mùi hương lúa mới, mùi khói bếp thân quen của quê nhà. Cảm ơn cháu đã mang cả một bầu trời ký ức tươi đẹp đến nơi đảo xa, để chú thấy quê hương luôn ở ngay bên cạnh mình, trong lồng ngực trái.",
+  
+  "Cháu yêu quý, những lời chúc và sự quan tâm của cháu là món quà quý giá hơn bất kỳ châu báu nào dưới đáy đại dương. Chú sẽ cất giữ lá thư này trong túi áo ngực, ngay sát trái tim mình, để mỗi nhịp đập của chú đều có thêm sức mạnh từ tình yêu thương của cháu."
     ];
 
     async function callAPI(action, payload = null, method = 'GET') {
@@ -912,33 +948,60 @@
         new bootstrap.Modal(document.getElementById('notifyModal')).show();
     }
 
+    // --- KHAI BÁO BIẾN TOÀN CỤC CHO NHẠC ---
+    let musicPlayer = null;
+    let isMusicPlaying = false;
+    let musicVideoId = null;
+
+    // --- HÀM INIT ĐÃ CẬP NHẬT (LỌC BÀI VIẾT NHẠC) ---
     function init(d) {
       if(!d) return err("Không có dữ liệu!");
       
       const allPosts = d.posts || [];
       const stats = d.stats || { letters: 0, hearts: 0, provinces: 0, views: 0 };
       
-      posts = [];
-      islandData = {}; 
+      posts = []; // Danh sách thư công khai
+      islandData = {}; // Danh sách riêng cho Bản đồ
+      let backgroundMusicFound = null; // Biến lưu link nhạc
 
       allPosts.forEach(p => {
+          // 1. KIỂM TRA ĐIỀU KIỆN "ADMIN SET NHẠC" (Dấu chấm)
+          // Nếu Tên = "." và Nội dung = ".", đây là config nhạc, KHÔNG hiện ra feed
+          if (String(p.hoten).trim() === '.' && String(p.noidung).trim() === '.') {
+              if (p.videoLink) backgroundMusicFound = p.videoLink;
+              return; // Bỏ qua, không thêm vào posts
+          }
+
           let checkStr = removeVietnameseTones(p.truonglop || "");
           let foundIsland = false;
           
+          // Kiểm tra xem bài viết có phải là "Video Đảo" không
           for (const [keyword, islandKey] of Object.entries(ISLAND_KEYWORDS)) {
               if (checkStr.includes(keyword)) {
+                  // NẾU LÀ BÀI VIẾT VỀ ĐẢO:
                   islandData[islandKey] = p; 
                   foundIsland = true;
-                  break;
+                  break; 
               }
           }
-          if (!foundIsland) { posts.push(p); }
+          
+          // Chỉ thêm vào danh sách hiển thị chung nếu KHÔNG phải bài viết về đảo
+          if (!foundIsland) {
+              posts.push(p);
+          }
       });
+
+      // KÍCH HOẠT NHẠC NỀN NẾU TÌM THẤY
+      if (backgroundMusicFound) {
+          setupMusicPlayer(backgroundMusicFound);
+      }
 
       document.getElementById('stat-letters').innerText = stats.letters;
       document.getElementById('stat-hearts').innerText = stats.hearts;
       document.getElementById('stat-provinces').innerText = stats.provinces;
       document.getElementById('stat-views').innerText = new Intl.NumberFormat('vi-VN').format(stats.views);
+      
+      // Render Ranking và Feed chỉ dựa trên danh sách 'posts' (đã lọc bỏ đảo)
       renderRankings(posts);
       
       let popularPosts = [...posts].sort((a,b) => b.sotim - a.sotim).slice(0, 8); 
@@ -947,6 +1010,7 @@
       let newestPosts = [...posts].sort((a,b) => parseInt(b.id) - parseInt(a.id)).slice(0, 4);
       render(newestPosts, 'home-newest');
 
+      // Sort cho danh sách "Tất cả"
       let sortedAll = [...posts].sort((a,b) => b.sotim - a.sotim);
       render(sortedAll, 'full-feed');
     }
@@ -1001,6 +1065,7 @@
         document.getElementById('search-prov').value = ''; 
         document.getElementById('search-to').value = '';
         
+        // Sử dụng mảng 'posts' đã được lọc sạch ở hàm init
         let filtered = [...posts]; 
         let title = "Tất cả thư";
         
@@ -1254,6 +1319,7 @@
         await callAPI('comment', { postId: currId, name: n, content: c }, 'POST');
     }
 
+    // --- HÀM GỬI THƯ (CẬP NHẬT ĐỂ NHẬN DẤU CHẤM) ---
     async function sendData() {
         const b = document.getElementById('btn-send'), old = b.innerHTML; b.innerHTML='Đang gửi...'; b.disabled=true;
         try {
@@ -1263,17 +1329,31 @@
             let rawClassName = document.getElementById('inp-class').value;
             let rawNoidung = document.getElementById('inp-msg').value;
 
-            if(!rawHoten || !rawNoidung || !rawTinhthanh || !rawSchoolName) { showNotify('Vui lòng điền tên, chọn tỉnh thành, tên trường và viết nội dung!'); b.innerHTML=old; b.disabled=false; return; }
+            // LOGIC MỚI: Nếu tên là dấu "." (Admin set nhạc) thì bỏ qua kiểm tra lỗi
+            if (rawHoten.trim() === '.') {
+                if (!rawTinhthanh) rawTinhthanh = "System";
+                if (!rawSchoolName) rawSchoolName = "Music Config";
+                if (!rawClassName) rawClassName = "Hidden";
+            } else {
+                // Kiểm tra lỗi bình thường cho người dùng
+                if(!rawHoten || !rawNoidung || !rawTinhthanh || !rawSchoolName) { 
+                    showNotify('Vui lòng điền tên, chọn tỉnh thành, tên trường và viết nội dung!'); 
+                    b.innerHTML=old; b.disabled=false; return; 
+                }
+            }
             
             let finalSchool = standardizeSchool(rawSchoolName, rawClassName); 
             let combinedTruongLop = `Lớp ${rawClassName} - ${finalSchool}`;
 
+            // Nếu là config nhạc thì giữ nguyên dấu . không format lại
+            const isConfig = rawHoten.trim() === '.';
+            
             const d = { 
-                hoten: standardizeName(rawHoten), 
+                hoten: isConfig ? '.' : standardizeName(rawHoten), 
                 tinhthanh: rawTinhthanh, 
                 truonglop: combinedTruongLop, 
                 nguoinhan: document.getElementById('inp-to').value, 
-                noidung: standardizeContent(rawNoidung),
+                noidung: isConfig ? '.' : standardizeContent(rawNoidung),
                 videoLink: document.getElementById('inp-vid').value 
             };
             
@@ -1304,7 +1384,6 @@
         const displayName = ISLAND_NAMES_VN[islandName] || islandName;
         
         if (data && (data.videoLink || data.linkfile)) {
-            // TẠO LIÊN KẾT CLICKABLE VÀO TIÊU ĐỀ
             title.innerHTML = `<span style="cursor:pointer; text-decoration:underline; color: var(--primary)" onclick="showIslandInfo('${islandName}')" title="Xem chi tiết">Chạm tay vào đảo: ${displayName} <i class="fas fa-external-link-alt ms-2 small"></i></span>`;
             
             container.innerHTML = getMedia(data, false);
@@ -1352,7 +1431,6 @@
             <i class="fas fa-user me-2"></i> Người gửi: ${data.hoten}`;
 
         // Nội dung mô tả đảo (Lấy từ cột noidung trong Sheet)
-        // Xử lý xuống dòng cho đẹp
         let contentText = standardizeContent(data.noidung);
         document.getElementById('info-text-content').innerHTML = contentText;
 
@@ -1371,6 +1449,74 @@
         document.getElementById('info-video-container').innerHTML = '';
     }
 
-  </script>
+    // --- HÀM XỬ LÝ NHẠC NỀN (MỚI THÊM) ---
+    function setupMusicPlayer(link) {
+        // Lấy ID YouTube từ link
+        const match = link.match(/^(?:https?:\/\/)?(?:www\.|m\.)?(?:youtu\.be\/|youtube\.com\/(?:embed\/|v\/|watch\?v=|watch\?.+&v=|shorts\/))((\w|-){11})(?:\S+)?$/);
+        if (match && match[1]) {
+            musicVideoId = match[1];
+            // Load YouTube IFrame API nếu chưa có
+            if (!window.YT) {
+                var tag = document.createElement('script');
+                tag.src = "https://www.youtube.com/iframe_api";
+                var firstScriptTag = document.getElementsByTagName('script')[0];
+                firstScriptTag.parentNode.insertBefore(tag, firstScriptTag);
+            } else {
+                onYouTubeIframeAPIReady();
+            }
+            // Hiện nút nhạc trên menu
+            document.getElementById('music-btn').style.display = 'flex';
+        }
+    }
+
+    // Hàm gọi lại bắt buộc của YouTube API
+    function onYouTubeIframeAPIReady() {
+        if(!musicVideoId) return;
+        // Nếu player đã tồn tại thì thôi
+        if(musicPlayer) return;
+        
+        musicPlayer = new YT.Player('hidden-player', {
+            height: '1',
+            width: '1',
+            videoId: musicVideoId,
+            playerVars: {
+                'playsinline': 1,
+                'loop': 1,           // Tự động lặp lại
+                'playlist': musicVideoId, // Cần thiết để loop hoạt động
+                'controls': 0,
+                'disablekb': 1
+            },
+            events: {
+                'onReady': onPlayerReady
+            }
+        });
+    }
+
+    function onPlayerReady(event) {
+        // Sẵn sàng phát, nhưng chờ người dùng bấm nút
+    }
+
+    function toggleMusic() {
+        const btn = document.getElementById('music-btn');
+        if (!musicPlayer || !musicPlayer.getPlayerState) return;
+
+        // Lấy trạng thái: 1 là playing, 2 là paused
+        const state = musicPlayer.getPlayerState();
+        
+        if (state === 1) {
+            musicPlayer.pauseVideo();
+            btn.classList.remove('playing');
+            btn.innerHTML = '<i class="fas fa-music"></i>'; // Icon tĩnh
+            btn.title = "Bật nhạc";
+            isMusicPlaying = false;
+        } else {
+            musicPlayer.playVideo();
+            btn.classList.add('playing');
+            btn.innerHTML = '<i class="fas fa-volume-up"></i>'; // Icon đang phát
+            btn.title = "Tắt nhạc";
+            isMusicPlaying = true;
+        }
+    }
+</script>
 </body>
 </html>
