@@ -6,6 +6,11 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Những Cánh Thư Vượt Sóng</title>
   
+  <!-- OPTIMIZATION: PRECONNECT -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="preconnect" href="https://drive.google.com">
+  
   <!-- CSS LIBRARIES -->
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
@@ -50,6 +55,9 @@
     .navbar.hidden { transform: translateY(-100%); } 
     .nav-link { font-weight: 600; color: #475569; margin-left: 20px; font-size: 0.9rem; text-transform: uppercase; cursor: pointer; transition: 0.3s; }
     .nav-link:hover { color: var(--primary); }
+    .nav-link-special { color: #d32f2f !important; font-weight: 800; border-bottom: 2px solid transparent; }
+    .nav-link-special:hover { border-bottom: 2px solid #d32f2f; }
+    
     .dropdown-menu { border: none; box-shadow: 0 10px 40px rgba(0,0,0,0.1); border-radius: 12px; margin-top: 15px; }
     .dropdown-item { padding: 10px 20px; font-weight: 500; cursor: pointer; }
     .dropdown-item:hover { background: #f1f5f9; color: var(--primary); }
@@ -98,7 +106,22 @@
     .user-name { font-weight: 700; color: #1e293b; font-size: 0.95rem; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
     .user-meta { font-size: 0.75rem; color: #64748b; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; display: flex; align-items: center; }
     .dot-sep { margin: 0 6px; font-size: 0.4rem; color: #cbd5e1; display: inline-block; vertical-align: middle; }
-    .handwritten-text { font-family: 'Great Vibes', cursive; font-size: 1.5rem; color: #334155; margin-top: 5px; margin-bottom: 10px; line-height: 1.4; }
+    
+    .handwritten-text { 
+        font-family: 'Great Vibes', cursive; 
+        font-size: 1.5rem; 
+        color: #334155; 
+        margin-top: 5px; 
+        margin-bottom: 10px; 
+        line-height: 1.4;
+        display: -webkit-box;
+        -webkit-line-clamp: 4; 
+        -webkit-box-orient: vertical;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: normal;
+    }
+    
     .badge-custom { background-color: #e0f2fe; color: #0369a1; padding: 4px 10px; border-radius: 20px; font-size: 0.7rem; font-weight: 600; display: inline-block; margin-bottom: 8px; border: 1px solid #bae6fd; }
     
     .search-bar-container { background: #fff; padding: 20px; border-radius: 16px; box-shadow: 0 4px 20px rgba(0,0,0,0.03); margin-bottom: 30px; border: 1px solid #e2e8f0; }
@@ -108,7 +131,7 @@
     
     .screen { display: none; opacity: 0; transition: opacity 0.3s; flex: 1; }
     .screen.active { display: block; opacity: 1; }
-    .media-box { background: #0f172a; border-radius: 12px; overflow: hidden; margin-top: 12px; display: flex; justify-content: center; align-items: center; width: 100%; }
+    .media-box { background: #0f172a; border-radius: 12px; overflow: hidden; margin-top: 12px; display: flex; justify-content: center; align-items: center; width: 100%; height: 200px; position: relative; }
     
     footer { background-color: #0f172a; color: white; padding: 60px 0 30px; margin-top: auto; border-top: 4px solid var(--primary); }
     .footer-title { font-weight: 800; font-size: 1.2rem; margin-bottom: 10px; text-transform: uppercase; letter-spacing: 1px; }
@@ -129,6 +152,12 @@
     .pdf-container { position: relative; width: 100%; height: 85vh; border-radius: 12px; overflow: hidden; box-shadow: 0 10px 30px rgba(0,0,0,0.1); }
     .pdf-container iframe { width: 100%; height: 100%; border: none; }
     
+    /* PDF PREVIEW CARD STYLE */
+    .pdf-preview-box {
+        background: #f1f5f9; border-radius: 12px; overflow: hidden; margin-top: 12px; height: 200px; position: relative; border: 1px solid #e2e8f0;
+    }
+    .pdf-preview-box iframe { width: 100%; height: 100%; border: none; pointer-events: none; }
+
     /* --- CSS SỬA LỖI VIDEO VỪA KHUNG & NỀN ĐEN CHUẨN --- */
     .video-container {
         position: relative;
@@ -154,6 +183,77 @@
     @keyframes heartBeat { 0% { transform: scale(1); } 50% { transform: scale(1.3); } 100% { transform: scale(1); } }
     .about-header { height: 200px; background: url('https://images.unsplash.com/photo-1505118380757-91f5f5632de0?q=80&w=2600') center/cover; position: relative; display: flex; align-items: center; justify-content: center; }
     .about-header-text { text-shadow: 0 2px 10px rgba(0,0,0,0.6); z-index: 2; padding: 0 20px; text-align: center; font-size: 2rem; }
+
+    /* --- CSS CHO BẢN ĐỒ TRƯỜNG SA --- */
+    .map-wrapper {
+        position: relative;
+        width: 100%;
+        max-width: 1200px;
+        margin: 0 auto;
+        overflow: hidden;
+        border-radius: 15px;
+        box-shadow: 0 10px 40px rgba(0,0,0,0.1);
+        background: #a2d9ff; /* Màu nước biển dự phòng */
+    }
+    .map-img {
+        width: 100%;
+        height: auto;
+        display: block;
+    }
+    .map-hotspot {
+        position: absolute;
+        width: 4%; /* Độ rộng điểm chạm */
+        height: 4%; /* Độ cao điểm chạm */
+        background: rgba(255, 0, 0, 0.0); /* Trong suốt để không che ảnh, đổi thành 0.3 để test vị trí */
+        border-radius: 50%;
+        cursor: pointer;
+        z-index: 10;
+        transition: transform 0.2s, background 0.2s;
+        transform: translate(-50%, -50%); /* Căn giữa điểm */
+    }
+    .map-hotspot:hover {
+        transform: translate(-50%, -50%) scale(1.5);
+        background: radial-gradient(circle, rgba(255,255,0,0.4) 0%, rgba(255,0,0,0) 70%);
+        border: 2px solid rgba(255,215,0,0.8);
+    }
+    
+    /* Vị trí các đảo (Cần điều chỉnh thủ công nếu chưa khớp 100%) */
+    #spot-songtutay { top: 25%; left: 66%; }
+    #spot-danam { top: 31%; left: 63%; }
+    #spot-sonca { top: 36%; left: 75%; }
+    #spot-namyet { top: 43%; left: 72%; }
+    #spot-sinhton { top: 48%; left: 67%; }
+    #spot-sinhtondong { top: 49%; left: 81%; }
+    #spot-colin { top: 55%; left: 64%; }
+    #spot-lendao { top: 56%; left: 74%; }
+    #spot-gacma { top: 57%; left: 62%; } /* Đã chỉnh lại cho bản đồ VN */
+    #spot-tiemnu { top: 67%; left: 88%; }
+    #spot-toc-tan { top: 62%; left: 81%; }
+    #spot-nuile { top: 68%; left: 77%; }
+    #spot-truongsa { top: 70%; left: 35%; }
+    #spot-truongsaddong { top: 60%; left: 45%; }
+    #spot-dadong { top: 59%; left: 52%; }
+    #spot-datay { top: 63%; left: 50%; }
+    #spot-dalat { top: 67%; left: 26%; }
+    #spot-thuyenchai { top: 73%; left: 53%; }
+    #spot-anbang { top: 78%; left: 49%; }
+    #spot-phanvinh { top: 67%; left: 66%; }
+    #spot-dalon { top: 42%; left: 56%; }
+
+    /* Modal Video Đảo */
+    .island-modal-body {
+        background: #000;
+        color: #fff;
+        border-radius: 12px;
+        padding: 20px;
+        text-align: center;
+    }
+    .island-title {
+        font-family: 'Playfair Display', serif;
+        font-size: 1.5rem;
+        color: var(--gold);
+        margin-bottom: 10px;
+    }
   </style>
 </head>
 <body>
@@ -185,9 +285,13 @@
       <div class="collapse navbar-collapse" id="navbarNav">
         <ul class="navbar-nav ms-auto align-items-center">
           <li class="nav-item"><a class="nav-link" onclick="goHome()">Trang chủ</a></li>
+          <!-- MENU MỚI THÊM VÀO -->
+          <li class="nav-item"><a class="nav-link nav-link-special" onclick="showMap()"><i class="fas fa-map-marked-alt me-1"></i> Chạm vào Trường Sa</a></li>
+          
           <li class="nav-item dropdown">
             <a class="nav-link dropdown-toggle" id="navbarDropdown" data-bs-toggle="dropdown"><i class="far fa-compass me-1"></i> Khám Phá</a>
             <ul class="dropdown-menu dropdown-menu-end animate__animated animate__fadeIn">
+              <li><a class="dropdown-item" onclick="showFeed('newest')">Thư vừa gửi (Mới nhất)</a></li>
               <li><a class="dropdown-item" onclick="showFeed('all')">Tất cả thư</a></li>
               <li><a class="dropdown-item" onclick="showFeed('popular')">Ngọn hải đăng (Nhiều tim)</a></li>
               <li><hr class="dropdown-divider"></li>
@@ -234,13 +338,25 @@
         </div>
     </div>
     <div class="container py-5">
+      
+      <!-- PHẦN THƯ NỔI BẬT (NGỌN HẢI ĐĂNG) -->
       <div class="d-flex justify-content-between align-items-end mb-4 px-2">
          <h3 class="fw-bold text-dark mb-0" style="font-family: 'Playfair Display', serif;"><i class="fas fa-fire text-danger me-2"></i>Ngọn hải đăng (Nổi bật)</h3>
-         <a href="javascript:void(0)" onclick="showFeed('all')" class="fw-bold text-primary text-decoration-none">Xem tất cả <i class="fas fa-arrow-right"></i></a>
+         <a href="javascript:void(0)" onclick="showFeed('popular')" class="fw-bold text-primary text-decoration-none">Xem tất cả <i class="fas fa-arrow-right"></i></a>
       </div>
       <div class="row g-4 mb-5" id="home-feed">
         <div class="text-center py-5 w-100"><div class="spinner-border text-primary"></div><div class="mt-3 text-muted fw-bold">Đang tải những cánh thư...</div></div>
       </div>
+
+      <!-- PHẦN THƯ MỚI (CHỈNH SỬA TÊN TẠI ĐÂY) -->
+      <div class="d-flex justify-content-between align-items-end mb-4 px-2">
+         <h3 class="fw-bold text-dark mb-0" style="font-family: 'Playfair Display', serif;"><i class="fas fa-paper-plane text-primary me-2"></i>Những cánh thư vừa gửi (Mới nhất)</h3>
+         <a href="javascript:void(0)" onclick="showFeed('newest')" class="fw-bold text-primary text-decoration-none">Xem thêm <i class="fas fa-arrow-right"></i></a>
+      </div>
+      <div class="row g-4 mb-5" id="home-newest">
+        <div class="text-center py-5 w-100"><div class="spinner-border text-primary"></div><div class="mt-3 text-muted fw-bold">Đang tải thư mới...</div></div>
+      </div>
+
     </div>
     <div class="ranking-section">
         <div class="container">
@@ -274,7 +390,7 @@
             <div class="col-md-4">
                 <div class="input-group">
                     <span class="input-group-text border-0 bg-transparent ps-3"><i class="fas fa-search text-muted"></i></span>
-                    <input type="text" id="search-name" class="form-control form-control-search border-start-0 ps-0" placeholder="Tìm theo tên người gửi..." onkeyup="filterLibrary()">
+                    <input type="text" id="search-name" class="form-control form-control-search border-start-0 ps-0" placeholder="Tìm tên, trường, lớp..." onkeyup="filterLibrary()">
                 </div>
             </div>
             <div class="col-md-4">
@@ -302,6 +418,42 @@
           <p class="text-muted">Không tìm thấy lá thư nào phù hợp với từ khóa của bạn.</p>
       </div>
     </div>
+  </div>
+
+  <!-- MAP SCREEN (NEW) -->
+  <div id="map-screen" class="screen" style="padding-top:100px; padding-bottom:50px">
+      <div class="container text-center">
+          <h3 class="fw-bold text-primary mb-2" style="font-family: 'Playfair Display', serif;">TRIỂN LÃM SỐ: CHẠM VÀO TRƯỜNG SA</h3>
+          <p class="text-muted mb-4">Chạm vào từng hòn đảo để xem những thước phim sống động gửi về từ nơi đầu sóng.</p>
+          
+          <div class="map-wrapper animate__animated animate__fadeIn">
+              <!-- Ảnh nền bản đồ -->
+              <img src="https://drive.google.com/thumbnail?id=1KwR5L3TpzxTMiwJdaMZi0_1o51xa42uM&sz=w1600" class="map-img" alt="Bản đồ Trường Sa">
+              
+              <!-- CÁC ĐIỂM CHẠM (HOTSPOTS) - 21 ĐẢO -->
+              <div class="map-hotspot" id="spot-songtutay" title="Đảo Song Tử Tây" onclick="openIslandVideo('Song Tu Tay')"></div>
+              <div class="map-hotspot" id="spot-danam" title="Đảo Đá Nam" onclick="openIslandVideo('Da Nam')"></div>
+              <div class="map-hotspot" id="spot-sonca" title="Đảo Sơn Ca" onclick="openIslandVideo('Son Ca')"></div>
+              <div class="map-hotspot" id="spot-namyet" title="Đảo Nam Yết" onclick="openIslandVideo('Nam Yet')"></div>
+              <div class="map-hotspot" id="spot-sinhton" title="Đảo Sinh Tồn" onclick="openIslandVideo('Sinh Ton')"></div>
+              <div class="map-hotspot" id="spot-sinhtondong" title="Đảo Sinh Tồn Đông" onclick="openIslandVideo('Sinh Ton Dong')"></div>
+              <div class="map-hotspot" id="spot-colin" title="Đảo Cô Lin" onclick="openIslandVideo('Co Lin')"></div>
+              <div class="map-hotspot" id="spot-lendao" title="Đảo Len Đao" onclick="openIslandVideo('Len Dao')"></div>
+              <div class="map-hotspot" id="spot-gacma" title="Đảo Gạc Ma" onclick="openIslandVideo('Gac Ma')"></div> <!-- Dùng tạm vị trí tương đối -->
+              <div class="map-hotspot" id="spot-tiemnu" title="Đảo Tiên Nữ" onclick="openIslandVideo('Tien Nu')"></div>
+              <div class="map-hotspot" id="spot-toc-tan" title="Đảo Tốc Tan" onclick="openIslandVideo('Toc Tan')"></div>
+              <div class="map-hotspot" id="spot-nuile" title="Đảo Núi Le" onclick="openIslandVideo('Nui Le')"></div>
+              <div class="map-hotspot" id="spot-truongsa" title="Đảo Trường Sa Lớn" onclick="openIslandVideo('Truong Sa')"></div>
+              <div class="map-hotspot" id="spot-truongsaddong" title="Đảo Trường Sa Đông" onclick="openIslandVideo('Truong Sa Dong')"></div>
+              <div class="map-hotspot" id="spot-dadong" title="Đảo Đá Đông" onclick="openIslandVideo('Da Dong')"></div>
+              <div class="map-hotspot" id="spot-datay" title="Đảo Đá Tây" onclick="openIslandVideo('Da Tay')"></div>
+              <div class="map-hotspot" id="spot-dalat" title="Đảo Đá Lát" onclick="openIslandVideo('Da Lat')"></div>
+              <div class="map-hotspot" id="spot-thuyenchai" title="Đảo Thuyền Chài" onclick="openIslandVideo('Thuyen Chai')"></div>
+              <div class="map-hotspot" id="spot-anbang" title="Đảo An Bang" onclick="openIslandVideo('An Bang')"></div>
+              <div class="map-hotspot" id="spot-phanvinh" title="Đảo Phan Vinh" onclick="openIslandVideo('Phan Vinh')"></div>
+              <div class="map-hotspot" id="spot-dalon" title="Đảo Đá Lớn" onclick="openIslandVideo('Da Lon')"></div>
+          </div>
+      </div>
   </div>
 
   <!-- DETAIL SCREEN -->
@@ -355,7 +507,7 @@
     </div>
   </div>
 
-  <!-- FORM SCREEN (ĐÃ CẬP NHẬT SELECT) -->
+  <!-- FORM SCREEN (ĐÃ CẬP NHẬT SELECT VÀ INPUT LỚP) -->
   <div id="form-screen" class="screen" style="padding-top:100px">
     <div class="container" style="max-width:600px">
       <div class="card border-0 shadow-lg p-4 rounded-4 animate__animated animate__zoomIn">
@@ -366,13 +518,20 @@
         <form id="uForm">
           <input type="text" class="form-control mb-3" id="inp-name" placeholder="Họ tên của bạn" required>
           <div class="row g-2 mb-3">
-            <div class="col-6">
-                <!-- DROPDOWN TỈNH THÀNH ĐÃ ĐƯỢC THÊM VÀO ĐÂY -->
+            <div class="col-5">
+                <!-- DROPDOWN TỈNH THÀNH -->
                 <select class="form-select" id="inp-loc" required>
                     <option value="" disabled selected>Chọn Tỉnh/Thành...</option>
                 </select>
             </div>
-            <div class="col-6"><input type="text" class="form-control" id="inp-school" placeholder="Trường / Lớp" required></div>
+            <!-- Ô NHẬP TÊN TRƯỜNG -->
+            <div class="col-7">
+                <input type="text" class="form-control" id="inp-school" placeholder="Tên Trường (VD: Ninh Khang)" required>
+            </div>
+            <!-- Ô NHẬP LỚP RIÊNG BIỆT -->
+            <div class="col-12 mt-2">
+                 <input type="text" class="form-control" id="inp-class" placeholder="Lớp (Hoặc tên Đảo nếu gửi video bản đồ)" required>
+            </div>
           </div>
           <select class="form-select mb-3" id="inp-to"><option>Chiến sĩ Hải Quân</option><option>Chiến sĩ Cảnh sát biển</option><option>Thư gửi Trường Sa & Nhà giàn DK1</option></select>
           <textarea class="form-control mb-3" id="inp-msg" rows="5" placeholder="Lời nhắn gửi..." required></textarea>
@@ -399,7 +558,7 @@
         </div>
         <div class="d-flex justify-content-center gap-3">
             <button class="btn btn-outline-secondary rounded-pill px-4 py-2 fw-bold" onclick="showForm()">Gửi lá thư khác</button>
-            <button class="btn btn-primary rounded-pill px-4 py-2 fw-bold shadow" onclick="showFeed('all')">Xem thư viện</button>
+            <button class="btn btn-primary rounded-pill px-4 py-2 fw-bold shadow" onclick="showFeed('newest')">Xem thư của tôi</button>
         </div>
     </div>
   </div>
@@ -428,12 +587,28 @@
     </div>
   </div>
 
+  <!-- MODAL XEM VIDEO ĐẢO (MỚI) -->
+  <div class="modal fade" id="islandVideoModal" tabindex="-1">
+    <div class="modal-dialog modal-dialog-centered modal-lg">
+        <div class="modal-content shadow-lg border-0" style="background: transparent;">
+            <div class="island-modal-body">
+                <div class="d-flex justify-content-between align-items-center mb-3">
+                    <div class="island-title" id="island-video-title">Tên Đảo</div>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+                </div>
+                <div id="island-video-container"></div>
+                <div class="mt-3 text-start small text-white-50" id="island-video-desc"></div>
+            </div>
+        </div>
+    </div>
+  </div>
+
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
   <script>
     // --- CẤU HÌNH LIÊN KẾT GOOGLE SHEET ---
     const API_URL = "https://script.google.com/macros/s/AKfycbwzHLsHtPYpRFlhOBZ45HCa9sw4ii2CU5yLPW5koBUomjYE--bs7LDui1a8LF-bjNJ2/exec"; 
 
-    // --- CẤU HÌNH DANH SÁCH TỈNH THÀNH ---
+    // --- CẤU HÌNH DANH SÁCH TỈNH THÀNH & TỪ CẤM ---
     const LIST_PROVINCES = [
         "Thành phố Hà Nội", "Thành phố Hồ Chí Minh", "Thành phố Hải Phòng", "Thành phố Đà Nẵng", "Thành phố Cần Thơ",
         "Tỉnh Hà Giang", "Tỉnh Cao Bằng", "Tỉnh Lai Châu", "Tỉnh Lào Cai", "Tỉnh Tuyên Quang", "Tỉnh Lạng Sơn", "Tỉnh Thái Nguyên", "Tỉnh Sơn La", "Tỉnh Phú Thọ", "Tỉnh Quảng Ninh", "Tỉnh Bắc Ninh",
@@ -443,67 +618,109 @@
         "Tỉnh Cà Mau", "Tỉnh Điện Biên", "Tỉnh Vĩnh Long", "Tỉnh Lâm Đồng"
     ];
 
-    // --- DANH SÁCH TỪ CẤM NÂNG CAO (GỒM XÚC PHẠM, GIA ĐÌNH, TÌNH DỤC, BẠO LỰC) ---
-    const BAD_WORDS_LIST = [
-        // 1. Tục tĩu / Tình dục / Bộ phận nhạy cảm
-        "địt", "đụ", "lồn", "cặc", "buồi", "dái", "vú", "bướm", "khe", "mông", "háng", "chịch", "xoạc", "thủ dâm", "quay tay", "thẩm du", "biến thái", "dâm", 
-        // 2. Xúc phạm gia đình
-        "mẹ mày", "bố mày", "cha mày", "bà mày", "tổ sư", "dòng họ mày", "cả lò", "bàn thờ", "mả cha", 
-        // 3. Xúc phạm cá nhân / Động vật
-        "thằng chó", "con chó", "chó đẻ", "súc sinh", "súc vật", "ngu", "óc chó", "óc lợn", "đần độn", "thiểu năng", "khùng", "điên", "thần kinh", "điếm", "phò", "đĩ", "cave", "hãm", "mất dạy", "vô học",
-        // 4. Các từ đệm thô tục viết tắt
-        "vãi", "vcl", "vl", "đm", "dm", "dkm", "vkl", "đéo", "bố láo", "mày tao", "cút", "xéo",
-        // 5. Đe dọa / Bạo lực
-        "giết", "chém", "đánh chết", "đâm chết", "bắn bỏ", "xử đẹp", 
-        // 6. Tiếng Anh thô tục (English Profanity)
-        "fuck", "shit", "bitch", "bastard", "asshole", "damn", "whore", "cunt", "pussy", "dick", "cock", "suck", "stupid", "idiot", "kill", "die"
-    ];
+    const BAD_WORDS_LIST = ["địt", "đụ", "lồn", "cặc", "buồi", "mẹ mày", "con chó", "thằng chó", "ngu", "óc chó", "điếm", "phò", "đĩ", "vãi", "vcl", "vl", "đm", "dm", "dkm", "vkl", "chết", "giết", "đéo", "fuck", "shit", "mày tao", "chửi", "cút", "biến", "chém", "chúng mày", "sex"];
+
+    // DANH SÁCH TỪ KHÓA ĐẢO ĐỂ LỌC VIDEO (Dựa trên tên class/lớp người dùng nhập)
+    const ISLAND_KEYWORDS = {
+        "song tu tay": "Song Tu Tay",
+        "da nam": "Da Nam",
+        "son ca": "Son Ca",
+        "nam yet": "Nam Yet",
+        "sinh ton dong": "Sinh Ton Dong", // Check trước Sinh Ton để tránh trùng
+        "sinh ton": "Sinh Ton",
+        "co lin": "Co Lin",
+        "len dao": "Len Dao",
+        "gac ma": "Gac Ma",
+        "tien nu": "Tien Nu",
+        "toc tan": "Toc Tan",
+        "nui le": "Nui Le",
+        "truong sa dong": "Truong Sa Dong", // Check trước Truong Sa
+        "truong sa": "Truong Sa",
+        "da dong": "Da Dong",
+        "da tay": "Da Tay",
+        "da lat": "Da Lat",
+        "thuyen chai": "Thuyen Chai",
+        "an bang": "An Bang",
+        "phan vinh": "Phan Vinh",
+        "da lon": "Da Lon"
+    };
+    
+    // Nơi lưu trữ video của các đảo
+    let islandData = {}; 
 
     // --- CÁC HÀM XỬ LÝ VĂN BẢN ---
-
-    // 1. Chuẩn hóa Tên
     function standardizeName(str) {
         if (!str) return "";
-        str = str.trim().toLowerCase().replace(/\s+/g, ' ');
+        str = String(str).trim().toLowerCase().replace(/\s+/g, ' ');
         return str.replace(/(^|\s)\S/g, l => l.toUpperCase());
     }
 
-    // 2. Chuẩn hóa Nội dung
+    // HÀM CHUẨN HÓA TÊN TRƯỜNG THÔNG MINH (DỰA VÀO LỚP)
+    function standardizeSchool(schoolInput, classInput) {
+        if (!schoolInput) return "";
+        let str = String(schoolInput).trim();
+
+        // 1. Viết hoa chữ cái đầu mỗi từ
+        str = str.toLowerCase().replace(/(^|\s)\S/g, l => l.toUpperCase());
+
+        // 2. Kiểm tra xem người dùng đã ghi rõ cấp học chưa (Tiểu học, THCS, THPT)
+        const lower = str.toLowerCase();
+        if (lower.includes("tiểu học") || lower.includes("mầm non") || lower.includes("thcs") || lower.includes("thpt") || lower.includes("trung học")) {
+            // Nếu đã có, chỉ đảm bảo có chữ "Trường" ở đầu
+            if (!lower.startsWith("trường")) {
+                str = "Trường " + str;
+            }
+            return str;
+        }
+
+        // 3. Nếu chưa có cấp học (vd: "Ninh Khang", "TH Ninh Khang") -> Dựa vào số LỚP để đoán
+        // Xóa chữ "TH", "T.H" hoặc "Trường" ở đầu đi để ghép lại cho chuẩn
+        str = str.replace(/^Trường\s+/i, "").replace(/^(Th|T\.h)\s+/i, "").trim();
+
+        // Lấy số từ ô Lớp
+        let grade = 0;
+        if (classInput) {
+            const match = classInput.match(/\d+/); // Tìm con số đầu tiên trong chuỗi lớp
+            if (match) grade = parseInt(match[0]);
+        }
+
+        let prefix = "Tiểu học"; // Mặc định là Tiểu học nếu không tìm thấy số hoặc số nhỏ
+        
+        if (grade >= 6 && grade <= 9) {
+            prefix = "THCS";
+        } else if (grade >= 10 && grade <= 12) {
+            prefix = "THPT";
+        }
+        // Nếu grade 1-5 hoặc grade = 0 (không nhập số) -> Vẫn giữ là "Tiểu học"
+
+        return `Trường ${prefix} ${str}`;
+    }
+
     function standardizeContent(str) {
         if (!str) return "";
+        str = String(str);
+        
+        if (str.length > 5 && str === str.toUpperCase()) {
+            str = str.toLowerCase();
+        }
+
         let upperCount = str.replace(/[^A-ZĂÂÁÀẢÃẠ...]/g, "").length; 
         if (str.length > 10 && (str === str.toUpperCase())) {
             str = str.toLowerCase();
         }
+        
         str = str.charAt(0).toUpperCase() + str.slice(1);
         return str.replace(/([.!?]\s+)([a-z])/g, (match, separator, char) => {
             return separator + char.toUpperCase();
         });
     }
 
-    // 3. Kiểm tra từ ngữ thô tục
     function containsBadWords(str) {
         if (!str) return false;
-        const textCheck = str.toLowerCase();
+        const textCheck = String(str).toLowerCase();
         return BAD_WORDS_LIST.some(word => textCheck.includes(word));
     }
     
-    // 4. Hàm bỏ dấu tiếng Việt & chuyển thường (Dùng cho tìm kiếm không phân biệt hoa thường)
-    function removeVietnameseTones(str) {
-        if(!str) return "";
-        str = str.replace(/à|á|ạ|ả|ã|â|ầ|ấ|ậ|ẩ|ẫ|ă|ằ|ắ|ặ|ẳ|ẵ/g,"a"); 
-        str = str.replace(/è|é|ẹ|ẻ|ẽ|ê|ề|ế|ệ|ể|ễ/g,"e"); 
-        str = str.replace(/ì|í|ị|ỉ|ĩ/g,"i"); 
-        str = str.replace(/ò|ó|ọ|ỏ|õ|ô|ồ|ố|ộ|ổ|ỗ|ơ|ờ|ớ|ợ|ở|ỡ/g,"o"); 
-        str = str.replace(/ù|ú|ụ|ủ|ũ|ư|ừ|ứ|ự|ử|ữ/g,"u"); 
-        str = str.replace(/ỳ|ý|ỵ|ỷ|ỹ/g,"y"); 
-        str = str.replace(/đ/g,"d");
-        str = str.replace(/\u0300|\u0301|\u0303|\u0309|\u0323/g, ""); 
-        str = str.replace(/\u02C6|\u0306|\u031B/g, ""); 
-        return str.toLowerCase(); // Quan trọng: luôn trả về chữ thường
-    }
-
-    // 5. Khởi tạo danh sách tỉnh thành
     function initProvinces() {
         const select = document.getElementById('inp-loc');
         select.innerHTML = '<option value="" disabled selected>Chọn Tỉnh/Thành...</option>';
@@ -516,22 +733,28 @@
     }
 
     // --- CÁC HÀM HỆ THỐNG ---
-
     function enterSite() {
         const intro = document.getElementById('intro-overlay');
         intro.classList.add('fade-out');
-        setTimeout(() => {
-            if(intro) intro.style.display = 'none';
-        }, 800);
+        setTimeout(() => { if(intro) intro.style.display = 'none'; }, 800);
     }
 
     let posts = [], currId = null;
-    
+    let currentRotation = 0; 
+    let sessionLikes = {}; 
+    let cardRotations = {};
+
     const successMessages = [
-        "Cảm ơn cháu! Những dòng chữ này sẽ là ngọn lửa ấm áp giữa biển khơi.",
-        "Lá thư đã được chuyển đi. Chú bộ đội sẽ rất vui khi nhận được tình cảm của cháu.",
-        "Biển đảo quê hương thêm gần lại nhờ những cánh thư yêu thương này.",
-        "Tuyệt vời! Một cánh chim hải âu vừa mang tin nhắn của cháu ra đảo xa."
+        "Cháu yêu quý, giữa bao la biển trời, từng dòng chữ của cháu như một làn gió mới mang theo hơi thở ấm áp của đất liền thổi vào tâm hồn chú. Ở nơi đầu sóng ngọn gió này, khi xung quanh chỉ có nắng cháy và vị mặn mòi của biển, sự quan tâm ngây thơ của cháu chính là nguồn nước mát lành nhất, tiếp thêm sức mạnh để chú chắc tay súng bảo vệ bình yên cho Tổ quốc.",
+        "Giữa mênh mông sóng nước, nhận được lời nhắn gửi của cháu, chú bỗng thấy khoảng cách ngàn dặm như tan biến. Tiếng sóng vỗ ầm ĩ ngoài kia dường như cũng dịu lại, nhường chỗ cho những nốt nhạc vui tươi nhảy múa trong lòng chú khi đọc thư cháu. Cháu hãy yên tâm học tập thật tốt nhé, vì ngoài này đã có các chú canh giữ biển trời.",
+        "Cháu thân yêu, lá thư nhỏ bé cháu gửi đã vượt ngàn con sóng dữ để đến tận tay chú, mang theo cả tình cảm thiêng liêng của hậu phương. Cầm lá thư trên tay, chú thấy như đang được nắm lấy bàn tay nhỏ bé của cháu, thấy được hình ảnh mái trường, con đường làng và những nụ cười bình yên mà các chú đang ngày đêm gìn giữ.",
+        "Cháu yêu quý, những lời cháu viết như những cánh hoa biển rực rỡ nhất nở giữa trùng khơi khô cằn. Nó nhắc nhở chú về lý do vì sao mình lại đứng ở đây, kiên cường dưới nắng gió khắc nghiệt: đó là để bảo vệ những ước mơ xanh và tương lai rạng ngời của những mầm non như cháu.",
+        "Giữa tiếng sóng ngày đêm không ngừng vỗ, lá thư ngắn của cháu như một bản tình ca êm dịu làm vơi đi nỗi nhớ nhà. Chú hứa sẽ là ngọn hải đăng vững chãi nhất, không ngại gian khó, không ngại hy sinh, để cháu và mọi người ở đất liền luôn có những giấc ngủ ngon và những ngày vui trọn vẹn.",
+        "Cháu thân yêu, lá thư nhỏ bé nhưng chứa đựng tình cảm lớn lao tựa như đại dương bao la ngoài kia. Mỗi nét chữ của cháu là một lời động viên, nhắc nhở chú rằng dù ở nơi đảo xa hẻo lánh, chú không bao giờ cô đơn vì luôn có những trái tim bé nhỏ ở đất liền hướng về.",
+        "Cháu yêu quý, trong từng nét chữ của cháu, thấy được niềm tin yêu trong sáng và lòng tự hào dân tộc đang lớn dần. Hãy nuôi dưỡng ước mơ ấy cháu nhé! Chú sẽ gom những ánh sao trời đẹp nhất trên biển đêm nay để gửi vào trong giấc mơ của cháu.",
+        "Giữa biển khơi xanh thẳm, lời nhắn gửi của cháu đến với chú như cánh chim hải âu mang tin vui về tổ ấm. Cháu biết không, chính sự hồn nhiên và chăm ngoan của cháu là hậu phương vững chắc nhất, giúp các chú vượt qua mọi bão tố phong ba để hoàn thành nhiệm vụ.",
+        "Cháu thân yêu, đọc những dòng chữ trong trẻo của cháu, chú dường như ngửi thấy mùi hương lúa mới, mùi khói bếp thân quen của quê nhà. Cảm ơn cháu đã mang cả một bầu trời ký ức tươi đẹp đến nơi đảo xa, để chú thấy quê hương luôn ở ngay bên cạnh mình, trong lồng ngực trái.",
+        "Cháu yêu quý, những lời chúc và sự quan tâm của cháu là món quà quý giá hơn bất kỳ châu báu nào dưới đáy đại dương. Chú sẽ cất giữ lá thư này trong túi áo ngực, ngay sát trái tim mình, để mỗi nhịp đập của chú đều có thêm sức mạnh từ tình yêu thương của cháu."
     ];
 
     async function callAPI(action, payload = null, method = 'GET') {
@@ -550,10 +773,22 @@
         } catch (e) { console.error("API Error:", e); throw e; }
     }
 
-    window.onload = () => { 
-        initData(); 
-        initProvinces(); 
-    };
+    function removeVietnameseTones(str) {
+        if (!str) return "";
+        str = String(str);
+        str = str.replace(/à|á|ạ|ả|ã|â|ầ|ấ|ậ|ẩ|ẫ|ă|ằ|ắ|ặ|ẳ|ẵ/g,"a"); 
+        str = str.replace(/è|é|ẹ|ẻ|ẽ|ê|ề|ế|ệ|ể|ễ/g,"e"); 
+        str = str.replace(/ì|í|ị|ỉ|ĩ/g,"i"); 
+        str = str.replace(/ò|ó|ọ|ỏ|õ|ô|ồ|ố|ộ|ổ|ỗ|ơ|ờ|ớ|ợ|ở|ỡ/g,"o"); 
+        str = str.replace(/ù|ú|ụ|ủ|ũ|ư|ừ|ứ|ự|ử|ữ/g,"u"); 
+        str = str.replace(/ỳ|ý|ỵ|ỷ|ỹ/g,"y"); 
+        str = str.replace(/đ/g,"d");
+        str = str.replace(/\u0300|\u0301|\u0303|\u0309|\u0323/g, ""); 
+        str = str.replace(/\u02C6|\u0306|\u031B/g, ""); 
+        return str.toLowerCase();
+    }
+
+    window.onload = () => { initData(); initProvinces(); };
     
     async function initData() {
         try {
@@ -572,15 +807,49 @@
 
     function init(d) {
       if(!d) return err("Không có dữ liệu!");
-      posts = d.posts || [];
+      
+      const allPosts = d.posts || [];
       const stats = d.stats || { letters: 0, hearts: 0, provinces: 0, views: 0 };
+      
+      // --- LOGIC LỌC BÀI VIẾT ĐẶC BIỆT (VIDEO ĐẢO) ---
+      posts = [];
+      islandData = {}; // Reset
+
+      allPosts.forEach(p => {
+          let checkStr = removeVietnameseTones(p.truonglop || "");
+          let foundIsland = false;
+          
+          for (const [keyword, islandKey] of Object.entries(ISLAND_KEYWORDS)) {
+              if (checkStr.includes(keyword)) {
+                  // Nếu tìm thấy tên đảo trong chuỗi lớp -> Đưa vào islandData
+                  islandData[islandKey] = p; // Lưu bài viết này cho đảo đó (lấy bài mới nhất nếu trùng)
+                  foundIsland = true;
+                  break;
+              }
+          }
+          
+          // Nếu không phải bài viết về đảo (hoặc không chứa từ khóa), đưa vào danh sách hiển thị chung
+          if (!foundIsland) {
+              posts.push(p);
+          }
+      });
+      // --------------------------------------------------
+
       document.getElementById('stat-letters').innerText = stats.letters;
       document.getElementById('stat-hearts').innerText = stats.hearts;
       document.getElementById('stat-provinces').innerText = stats.provinces;
       document.getElementById('stat-views').innerText = new Intl.NumberFormat('vi-VN').format(stats.views);
       renderRankings(posts);
+      
+      // RENDER THƯ NỔI BẬT TRƯỚC (Theo yêu cầu mới)
       let popularPosts = [...posts].sort((a,b) => b.sotim - a.sotim).slice(0, 8); 
       render(popularPosts, 'home-feed'); 
+
+      // SỬA LỖI: RENDER THƯ MỚI NHẤT (SẮP XẾP THEO ID GIẢM DẦN)
+      let newestPosts = [...posts].sort((a,b) => parseInt(b.id) - parseInt(a.id)).slice(0, 4);
+      render(newestPosts, 'home-newest');
+
+      // RENDER TẤT CẢ (Để sẵn cho trang feed)
       let sortedAll = [...posts].sort((a,b) => b.sotim - a.sotim);
       render(sortedAll, 'full-feed');
     }
@@ -588,8 +857,16 @@
     function renderRankings(data) {
         let provCounts = {}, schoolCounts = {};
         data.forEach(p => {
-            let pr = p.tinhthanh ? p.tinhthanh.trim() : "Khác";
-            let sc = p.truonglop ? p.truonglop.trim() : "Khác";
+            let pr = p.tinhthanh ? String(p.tinhthanh).trim() : "Khác";
+            let rawSc = p.truonglop ? String(p.truonglop).trim() : "Khác";
+            let sc = rawSc;
+            if (rawSc.includes(" - ")) {
+                let parts = rawSc.split(" - ");
+                if (parts.length > 1) sc = parts[1].trim(); 
+            } else if (rawSc.includes("-")) {
+                 let parts = rawSc.split("-");
+                 if (parts.length > 1) sc = parts[1].trim();
+            }
             if(pr && pr.toLowerCase() !== 'khác') provCounts[pr] = (provCounts[pr] || 0) + 1;
             if(sc && sc.toLowerCase() !== 'khác') schoolCounts[sc] = (schoolCounts[sc] || 0) + 1;
         });
@@ -609,9 +886,12 @@
     }
 
     function err(e) { document.getElementById('home-feed').innerHTML = `<div class="text-danger text-center py-5">Lỗi kết nối máy chủ.<br><small>${e}</small></div>`; }
+    
+    // --- ĐIỀU HƯỚNG MÀN HÌNH ---
     function goHome(){ show('home-screen'); }
     function showForm(){ document.getElementById('uForm').reset(); document.getElementById('btn-send').innerHTML = 'GỬI THƯ NGAY'; document.getElementById('btn-send').disabled = false; show('form-screen'); }
     function showAbout() { show('about-screen'); }
+    function showMap() { show('map-screen'); } // Hàm mở màn hình bản đồ
     function showSuccess() { document.getElementById('success-msg-content').innerText = successMessages[Math.floor(Math.random() * successMessages.length)]; show('success-screen'); }
     
     function openSearch() {
@@ -627,40 +907,43 @@
         
         let filtered = [...posts]; 
         let title = "Tất cả thư";
-
-        if(type === 'popular') { title = "Thư Nổi Bật (Nhiều tim nhất)"; }
+        
+        if(type === 'newest') {
+             title = "Những Cánh Thư Vừa Gửi (Mới Nhất)";
+             filtered.sort((a, b) => parseInt(b.id) - parseInt(a.id));
+        }
+        else if(type === 'popular') { title = "Thư Nổi Bật (Nhiều tim nhất)"; }
         else if(type === 'haiquan') { document.getElementById('search-to').value = "Hải Quân"; filtered = filtered.filter(p=>p.nguoinhan.includes("Hải Quân")); title = "Thư Gửi chiến Sĩ Hải Quân"; }
         else if(type === 'canhsat') { document.getElementById('search-to').value = "Cảnh sát"; filtered = filtered.filter(p=>p.nguoinhan.includes("Cảnh sát")); title = "Thư Gửi chiến Sĩ Cảnh Sát Biển"; }
         else if(type === 'truongsa') { document.getElementById('search-to').value = "Trường Sa"; filtered = filtered.filter(p=>p.nguoinhan.includes("Trường Sa") || p.nguoinhan.includes("DK1")); title = "Thư Gửi Trường Sa & Nhà Giàn DK1"; }
         else if(type === 'video') { filtered = filtered.filter(p=>p.videoLink); title = "Video Clip"; }
 
-        filtered.sort((a, b) => parseInt(b.sotim) - parseInt(a.sotim));
+        if(type !== 'newest') {
+             filtered.sort((a, b) => parseInt(b.sotim) - parseInt(a.sotim));
+        }
+        
         document.getElementById('feed-title').innerText = title; 
         render(filtered, 'full-feed'); 
     }
 
-    // --- HÀM TÌM KIẾM ĐÃ CẬP NHẬT (HỖ TRỢ HOA/THƯỜNG) ---
     function filterLibrary() {
-        // Lấy giá trị input và chuẩn hóa (bỏ dấu + chuyển thành chữ thường)
-        const nameVal = removeVietnameseTones(document.getElementById('search-name').value);
-        const provVal = removeVietnameseTones(document.getElementById('search-prov').value);
+        const nameVal = removeVietnameseTones(document.getElementById('search-name').value).trim();
+        const provVal = removeVietnameseTones(document.getElementById('search-prov').value).trim();
         const toVal = document.getElementById('search-to').value; 
         
         let result = posts.filter(p => {
-            // Chuẩn hóa dữ liệu trong bài viết trước khi so sánh
-            // (Thêm || "" để tránh lỗi nếu dữ liệu trống)
-            const matchesName = removeVietnameseTones(p.hoten || "").includes(nameVal);
-            const matchesProv = removeVietnameseTones(p.tinhthanh || "").includes(provVal);
+            const combinedText = removeVietnameseTones(String(p.hoten) + " " + String(p.truonglop));
+            const matchesName = combinedText.includes(nameVal);
+            const matchesProv = removeVietnameseTones(String(p.tinhthanh)).includes(provVal);
             let matchesTo = true;
             if (toVal) {
-                if(toVal === "Trường Sa") matchesTo = p.nguoinhan.includes("Trường Sa") || p.nguoinhan.includes("DK1");
-                else matchesTo = p.nguoinhan.includes(toVal);
+                let pTo = removeVietnameseTones(p.nguoinhan);
+                if(toVal === "Trường Sa") matchesTo = pTo.includes("truong sa") || pTo.includes("dk1");
+                else matchesTo = pTo.includes(removeVietnameseTones(toVal));
             }
             return matchesName && matchesProv && matchesTo;
         });
-
         result.sort((a, b) => parseInt(b.sotim) - parseInt(a.sotim));
-
         if (result.length > 0) { document.getElementById('no-result').classList.add('d-none'); render(result, 'full-feed'); } 
         else { document.getElementById('full-feed').innerHTML = ''; document.getElementById('no-result').classList.remove('d-none'); }
     }
@@ -677,50 +960,52 @@
         if(posts.length) show('feed-screen'); else goHome();
     }
 
-    // --- HÀM XỬ LÝ MEDIA (SANDBOX - CHẶN TAB MỚI) ---
+    // --- HÀM MEDIA ---
     function getMedia(p, isDetail = false) {
         let html = '';
         const getDriveId = (link) => { if(!link) return null; const m = link.match(/[-\w]{25,}/); return m ? m[0] : null; };
-        const getYtId = (link) => {
-            if(!link) return null;
-            const regExp = /^(?:https?:\/\/)?(?:www\.|m\.)?(?:youtu\.be\/|youtube\.com\/(?:embed\/|v\/|watch\?v=|watch\?.+&v=|shorts\/))((\w|-){11})(?:\S+)?$/;
-            const match = link.match(regExp);
-            return (match && match[1]) ? match[1] : null;
-        }
+        const getYtId = (link) => { if(!link) return null; const match = link.match(/^(?:https?:\/\/)?(?:www\.|m\.)?(?:youtu\.be\/|youtube\.com\/(?:embed\/|v\/|watch\?v=|watch\?.+&v=|shorts\/))((\w|-){11})(?:\S+)?$/); return (match && match[1]) ? match[1] : null; }
         const sandboxAttr = 'sandbox="allow-scripts allow-same-origin allow-presentation"';
 
         if(p.videoLink) {
             const ytId = getYtId(p.videoLink);
             const driveId = getDriveId(p.videoLink);
             if(ytId) {
-                html = `<div class="video-container" onclick="event.stopPropagation()">
-                            <iframe src="https://www.youtube.com/embed/${ytId}?rel=0&modestbranding=1&playsinline=1&iv_load_policy=3&fs=0" 
-                            ${sandboxAttr} allowfullscreen></iframe>
-                        </div>`;
+                html = `<div class="video-container" onclick="event.stopPropagation()"><iframe src="https://www.youtube.com/embed/${ytId}" ${sandboxAttr} allowfullscreen loading="lazy"></iframe></div>`;
             } else if (driveId) {
-                html = `<div class="video-container" onclick="event.stopPropagation()">
-                            <iframe src="https://drive.google.com/file/d/${driveId}/preview" 
-                            ${sandboxAttr} allowfullscreen></iframe>
-                        </div>`;
+                html = `<div class="video-container" onclick="event.stopPropagation()"><iframe src="https://drive.google.com/file/d/${driveId}/preview" ${sandboxAttr} allowfullscreen loading="lazy"></iframe></div>`;
             }
-        } else if(p.linkfile) {
+        } 
+        else if(p.linkfile) {
              const id = getDriveId(p.linkfile);
              if(id) {
-                const isImage = p.loaifile && p.loaifile.toLowerCase().includes('image');
-                const isVideo = p.loaifile && p.loaifile.toLowerCase().includes('video');
+                const isImage = p.loaifile && String(p.loaifile).toLowerCase().includes('image');
+                const isVideo = p.loaifile && String(p.loaifile).toLowerCase().includes('video');
+                const isPDF = !isImage && !isVideo; 
+                
                 if (isVideo) {
-                    html = `<div class="video-container" onclick="event.stopPropagation()">
-                                <iframe src="https://drive.google.com/file/d/${id}/preview" 
-                                ${sandboxAttr} allowfullscreen></iframe>
-                            </div>`;
+                    html = `<div class="video-container" onclick="event.stopPropagation()"><iframe src="https://drive.google.com/file/d/${id}/preview" ${sandboxAttr} allowfullscreen loading="lazy"></iframe></div>`;
                 } else if (isImage) {
                     if(isDetail) {
-                        html = `<div class="detail-image-box mb-3"><img src="https://drive.google.com/thumbnail?id=${id}&sz=w1600"></div>`;
+                        html = `<div class="detail-image-box mb-3 overflow-hidden text-center" style="background:#f8fafc; border-radius:12px; padding:10px;">
+                                    <img id="main-detail-img" src="https://drive.google.com/thumbnail?id=${id}&sz=w1600" style="transition: transform 0.3s ease; max-width:100%; display:inline-block;" loading="lazy">
+                                </div>
+                                <div class="text-center mb-4">
+                                    <button class="btn btn-sm btn-outline-dark rounded-pill px-3" onclick="rotateImg()"><i class="fas fa-sync-alt me-1"></i> Xoay ảnh</button>
+                                </div>`;
                     } else {
-                        html = `<div class="media-box"><img src="https://drive.google.com/thumbnail?id=${id}&sz=w800" style="width:100%; object-fit:cover; max-height:200px"></div>`;
+                        html = `<div class="media-box">
+                                    <img id="img-${p.id}" src="https://drive.google.com/thumbnail?id=${id}&sz=w800" style="width:100%; height:100%; object-fit:cover; transition:transform 0.3s ease;" loading="lazy">
+                                </div>`;
                     }
-                } else if (isDetail) {
-                    html = `<div class="pdf-container mb-3"><iframe src="https://drive.google.com/file/d/${id}/preview" ${sandboxAttr}></iframe></div>`;
+                } else if (isPDF) {
+                    if (isDetail) {
+                        html = `<div class="pdf-container mb-3"><iframe src="https://drive.google.com/file/d/${id}/preview" ${sandboxAttr}></iframe></div>`;
+                    } else {
+                        html = `<div class="media-box">
+                                    <img src="https://drive.google.com/thumbnail?id=${id}&sz=w800" style="width:100%; height:100%; object-fit:cover;" loading="lazy">
+                                </div>`;
+                    }
                 }
              }
         }
@@ -728,42 +1013,87 @@
         return html;
     }
 
+    function rotateImg() {
+        const img = document.getElementById('main-detail-img');
+        if(img) {
+            currentRotation += 90;
+            if(currentRotation >= 360) currentRotation = 0;
+            let scale = 1;
+            if (currentRotation % 180 !== 0) { scale = 0.8; }
+            img.style.transform = `rotate(${currentRotation}deg) scale(${scale})`;
+        }
+    }
+
+    function rotatePostImg(postId) {
+        const img = document.getElementById(`img-${postId}`);
+        if(img) {
+            if (!cardRotations[postId]) cardRotations[postId] = 0;
+            cardRotations[postId] += 90;
+            if (cardRotations[postId] >= 360) cardRotations[postId] = 0;
+            
+            let scale = 1;
+            if (cardRotations[postId] % 180 !== 0) { scale = 0.75; }
+            img.style.transform = `rotate(${cardRotations[postId]}deg) scale(${scale})`;
+        }
+    }
+
     function render(lst, divId) {
-        const div = document.getElementById(divId); div.innerHTML = '';
+        const div = document.getElementById(divId); 
+        div.innerHTML = '';
         if(!lst.length) { 
-            if(divId === 'home-feed') div.innerHTML='<div class="text-center w-100 text-muted py-5">Chưa có bài viết nào.</div>'; 
+            if(divId === 'home-feed' || divId === 'home-newest') div.innerHTML='<div class="text-center w-100 text-muted py-5">Chưa có bài viết nào.</div>'; 
             return; 
         }
+        
+        let htmlContent = '';
         lst.forEach(p => {
-            div.innerHTML += `
+            let displayContent = standardizeContent(p.noidung);
+            let showRotateBtn = false;
+            if (p.linkfile && (String(p.loaifile).toLowerCase().includes('image'))) { showRotateBtn = true; }
+            let rotateBtnHTML = '';
+            if (showRotateBtn) {
+                rotateBtnHTML = `<button class="btn btn-sm btn-light border rounded-circle text-muted mx-2" onclick="event.stopPropagation(); rotatePostImg('${p.id}')" title="Xoay ảnh"><i class="fas fa-sync-alt"></i></button>`;
+            }
+            htmlContent += `
             <div class="col-md-6 col-lg-3 animate__animated animate__fadeIn">
                 <div class="post-card" style="cursor: pointer;" onclick="detail('${p.id}')">
                     <div class="post-header">
-                        <div class="avatar">${p.hoten ? p.hoten[0] : '?'}</div>
+                        <div class="avatar">${p.hoten ? String(p.hoten)[0] : '?'}</div>
                         <div class="user-info"><div class="user-name">${p.hoten}</div><div class="user-meta"><span>${p.truonglop}</span><i class="fas fa-circle dot-sep"></i><span><i class="fas fa-map-marker-alt me-1"></i>${p.tinhthanh}</span></div></div>
                     </div>
-                    <div class="p-3 flex-grow-1">
+                    <div class="p-3 flex-grow-1 d-flex flex-column">
                         <span class="badge-custom"><i class="far fa-paper-plane me-1"></i>${p.nguoinhan}</span>
-                        <div class="handwritten-text" style="white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">${p.noidung}</div>
+                        <div class="handwritten-text flex-grow-1">${displayContent}</div>
                         ${getMedia(p)}
                     </div>
                     <div class="p-3 bg-light d-flex justify-content-between align-items-center mt-auto">
                         <button class="btn btn-sm bg-white shadow-sm rounded-pill text-danger border fw-bold btn-like-wrapper-${p.id}" onclick="event.stopPropagation();like('${p.id}')"><i class="fas fa-heart"></i> <span class="like-cnt-${p.id}">${p.sotim}</span></button>
-                        <small class="text-primary fw-bold">Chi tiết <i class="fas fa-arrow-right"></i></small>
+                        <div class="d-flex align-items-center">
+                            ${rotateBtnHTML}
+                            <small class="text-primary fw-bold ms-2">Chi tiết <i class="fas fa-arrow-right"></i></small>
+                        </div>
                     </div>
                 </div>
             </div>`;
         });
+        div.innerHTML = htmlContent;
     }
 
     function detail(id) {
+        currentRotation = 0; 
         currId = id; const p = posts.find(x=>x.id==id); if(!p) return;
         document.getElementById('mainNav').classList.add('hidden');
+        
+        let displayContent = standardizeContent(p.noidung);
+
         document.getElementById('detail-cont').innerHTML = `
-            <div class="detail-title">${p.hoten}: Gửi ${p.nguoinhan}</div>
-            <div class="detail-meta"><span><i class="far fa-clock me-1"></i> ${p.thoigian}</span> <span class="mx-2">|</span> <span><i class="fas fa-map-marker-alt me-1"></i> ${p.tinhthanh}</span></div>
+            <div class="detail-title">
+                ${p.hoten}
+                <div class="fs-6 text-muted fw-normal mt-1"><i class="fas fa-school me-2"></i>${p.truonglop}</div>
+            </div>
+            <div class="detail-meta"><span>Gửi: ${p.nguoinhan}</span> <span class="mx-2">|</span> <span><i class="fas fa-map-marker-alt me-1"></i> ${p.tinhthanh}</span></div>
             ${getMedia(p, true)}
-            <div class="detail-content">${p.noidung}</div>
+            <div class="detail-content">${displayContent}</div>
             <div class="text-center mt-5"><button class="btn btn-outline-danger btn-lg rounded-pill px-5 fw-bold btn-like-wrapper-${p.id}" onclick="like('${p.id}')"><i class="fas fa-heart me-2"></i> Thả tim (<span class="like-cnt-${p.id}">${p.sotim}</span>)</button></div>
         `;
         show('detail-screen'); loadCmt(id);
@@ -772,12 +1102,17 @@
     async function like(id) {
         const p = posts.find(x => x.id == id);
         if(p) {
+            if(!sessionLikes[id]) sessionLikes[id] = 0;
+            if(sessionLikes[id] >= 4000) {
+                showNotify("Bạn chỉ được thả tim tối đa 4000 lần cho bài viết này trong 1 lân đăng nhập!", "warning");
+                return;
+            }
+            sessionLikes[id]++;
             p.sotim = Number(p.sotim) + 1;
             document.querySelectorAll(`.like-cnt-${id}`).forEach(el => el.innerText = p.sotim);
             document.querySelectorAll(`.btn-like-wrapper-${id}`).forEach(btn => btn.classList.add('heart-pulse'));
             const globalHeartEl = document.getElementById('stat-hearts');
             globalHeartEl.innerText = (parseInt(globalHeartEl.innerText.replace(/\./g, '')) || 0) + 1;
-            
             await callAPI('like', { id: id }, 'POST');
         }
     }
@@ -794,55 +1129,41 @@
         let n = document.getElementById('c-name').value;
         const c = document.getElementById('c-text').value;
         if(!n || !c) return showNotify('Vui lòng nhập đủ tên và nội dung!');
-        
-        // --- KIỂM TRA TỪ CẤM NÂNG CAO ---
-        if (containsBadWords(n) || containsBadWords(c)) {
-            return showNotify("CẢNH BÁO: Nội dung bình luận chứa từ ngữ thô tục, xúc phạm hoặc bạo lực. Vui lòng sử dụng ngôn từ văn minh!", "error");
-        }
-        
+        if (containsBadWords(n) || containsBadWords(c)) { return showNotify("Nội dung bình luận chứa từ ngữ không phù hợp.", "error"); }
         n = standardizeName(n);
-
         const box = document.getElementById('cmt-list');
         const fakeCmt = `<div class="d-flex mb-3 animate__animated animate__fadeIn"><div class="avatar me-3 shadow-sm" style="width:40px;height:40px;font-size:1rem">${n[0]}</div><div class="bg-white border p-3 rounded-4 w-100 shadow-sm"><div class="fw-bold text-primary mb-1">${n}</div><div class="text-dark">${c}</div></div></div>`;
         if(box.innerHTML.includes('người đầu tiên')) box.innerHTML = '';
         box.innerHTML = fakeCmt + box.innerHTML;
         document.getElementById('c-text').value='';
-        
         await callAPI('comment', { postId: currId, name: n, content: c }, 'POST');
     }
 
     async function sendData() {
         const b = document.getElementById('btn-send'), old = b.innerHTML; b.innerHTML='Đang gửi...'; b.disabled=true;
-        
         try {
             let rawHoten = document.getElementById('inp-name').value;
             let rawTinhthanh = document.getElementById('inp-loc').value; 
-            let rawTruonglop = document.getElementById('inp-school').value;
+            let rawSchoolName = document.getElementById('inp-school').value;
+            let rawClassName = document.getElementById('inp-class').value;
             let rawNoidung = document.getElementById('inp-msg').value;
 
-            if(!rawHoten || !rawNoidung || !rawTinhthanh) { 
-                showNotify('Vui lòng điền tên, chọn tỉnh thành và viết nội dung!'); 
-                b.innerHTML=old; b.disabled=false; 
-                return; 
-            }
-
-            // --- KIỂM TRA TỪ CẤM TRONG THƯ ---
-            if (containsBadWords(rawHoten) || containsBadWords(rawNoidung) || containsBadWords(rawTruonglop)) {
-                b.innerHTML = old; b.disabled = false;
-                return showNotify("Phát hiện từ ngữ thô tục hoặc không phù hợp trong nội dung thư. Vui lòng kiểm tra lại!", "error");
-            }
+            if(!rawHoten || !rawNoidung || !rawTinhthanh || !rawSchoolName) { showNotify('Vui lòng điền tên, chọn tỉnh thành, tên trường và viết nội dung!'); b.innerHTML=old; b.disabled=false; return; }
+            
+            // XỬ LÝ GỘP DỮ LIỆU TRƯỜNG LỚP
+            let finalSchool = standardizeSchool(rawSchoolName, rawClassName); 
+            let combinedTruongLop = `Lớp ${rawClassName} - ${finalSchool}`;
 
             const d = { 
                 hoten: standardizeName(rawHoten), 
                 tinhthanh: rawTinhthanh, 
-                truonglop: standardizeName(rawTruonglop), 
+                truonglop: combinedTruongLop, 
                 nguoinhan: document.getElementById('inp-to').value, 
                 noidung: standardizeContent(rawNoidung),
                 videoLink: document.getElementById('inp-vid').value 
             };
             
             const fileInp = document.getElementById('inp-file').files[0];
-            
             const processUpload = async (fileData = null) => {
                 const payload = { ...d, fileName: fileData ? fileData.name : null, fileType: fileData ? fileData.type : null, fileData: fileData ? fileData.data : null };
                 const r = await callAPI('upload', payload, 'POST');
@@ -854,14 +1175,37 @@
                 const r = new FileReader(); 
                 r.onload = e => processUpload({ name: fileInp.name, type: fileInp.type, data: e.target.result.split(',')[1] }); 
                 r.readAsDataURL(fileInp); 
-            } else {
-                processUpload(null);
-            }
-        } catch (error) {
-            console.error(error);
-            showNotify('Có lỗi xảy ra, vui lòng thử lại!', 'error');
-            b.innerHTML=old; b.disabled=false;
+            } else { processUpload(null); }
+        } catch (error) { console.error(error); showNotify('Có lỗi xảy ra, vui lòng thử lại!', 'error'); b.innerHTML=old; b.disabled=false; }
+    }
+    
+    // --- HÀM XỬ LÝ CHẠM VÀO ĐẢO ---
+    function openIslandVideo(islandName) {
+        const modal = new bootstrap.Modal(document.getElementById('islandVideoModal'));
+        const container = document.getElementById('island-video-container');
+        const title = document.getElementById('island-video-title');
+        const desc = document.getElementById('island-video-desc');
+        
+        const data = islandData[islandName];
+        
+        if (data && (data.videoLink || data.linkfile)) {
+            title.innerText = "Video từ: " + islandName;
+            container.innerHTML = getMedia(data, false); // Sử dụng lại hàm getMedia
+            // Hiển thị tên trường ở phần mô tả
+            let schoolName = data.truonglop;
+            if (schoolName.includes("-")) { schoolName = schoolName.split("-")[1].trim(); }
+            desc.innerHTML = `<i class="fas fa-university me-2"></i> ${schoolName} <br> <i class="fas fa-user me-2"></i> Người gửi: ${data.hoten}`;
+        } else {
+            title.innerText = "Đảo " + islandName;
+            container.innerHTML = '<div style="padding: 50px; color: #aaa;">Chưa có dữ liệu video cho đảo này.</div>';
+            desc.innerHTML = '';
         }
+        modal.show();
+        
+        // Dừng video khi đóng modal
+        document.getElementById('islandVideoModal').addEventListener('hidden.bs.modal', function () {
+            container.innerHTML = '';
+        });
     }
   </script>
 </body>
