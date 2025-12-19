@@ -260,23 +260,38 @@
         text-shadow: none; /* Bỏ bóng đen */
     }
     
-    /* --- CSS CHO MÀN HÌNH CHI TIẾT ĐẢO (ISLAND INFO SCREEN) --- */
+   /* --- SỬA LẠI CSS ĐỂ HIỆN MENU VÀ NỀN BIỂN --- */
+
+    /* 1. Đưa thanh Menu lên lớp cao nhất để không bị che */
+    .navbar { 
+        background: white; 
+        box-shadow: 0 4px 20px rgba(0,0,0,0.03); 
+        padding: 10px 0; 
+        transition: transform 0.4s ease-in-out; 
+        z-index: 9999 !important; /* QUAN TRỌNG: Tăng chỉ số này lên cao nhất */
+    }
+
+    /* 2. Cấu hình màn hình chi tiết đảo */
     #island-info-screen {
-        background: url('https://images.unsplash.com/photo-1589330694653-3839450c2659?q=80&w=2670&auto=format&fit=crop') no-repeat center center fixed;
+        /* Link ảnh nền trực tiếp chất lượng cao */
+        background: url('https://drive.google.com/thumbnail?id=1x3KolfeX0Zg_w7UWFUSmciyieDx6MuiZ&sz=w2560') no-repeat center center fixed;
         background-size: cover;
         position: fixed;
         top: 0;
         left: 0;
         width: 100%;
         height: 100%;
-        z-index: 2050;
+        z-index: 5000; /* Thấp hơn navbar (9999) nhưng cao hơn các phần khác */
         overflow-y: auto;
+        padding-top: 60px; /* Chừa khoảng trống cho menu */
     }
+
+    /* 3. Làm trong suốt lớp phủ để nhìn thấy nền biển */
     .island-info-overlay {
-        background: rgba(255, 255, 255, 0.4); /* Lớp phủ mờ */
-        backdrop-filter: blur(5px);
+        background: rgba(0,0,0,0); /* Trong suốt hoàn toàn */
+        backdrop-filter: none; /* Không làm mờ */
         min-height: 100%;
-        padding-top: 80px;
+        padding-top: 40px;
         padding-bottom: 50px;
     }
     .island-big-title {
@@ -519,7 +534,7 @@
           
           <div class="map-wrapper animate__animated animate__fadeIn">
               <!-- Ảnh nền bản đồ -->
-              <img src="https://drive.google.com/thumbnail?id=1KwR5L3TpzxTMiwJdaMZi0_1o51xa42uM&sz=w1600" class="map-img" alt="Bản đồ Trường Sa">
+              <img src="https://drive.google.com/thumbnail?id=140IL3nahd1BfDkP8MORitt5rF0SlcCoN&sz=w1600" class="map-img" alt="Bản đồ Trường Sa">
               
               <!-- CÁC ĐIỂM CHẠM (HOTSPOTS) - 21 ĐẢO -->
               <div class="map-hotspot" id="spot-songtutay" title="Đảo Song Tử Tây" onclick="openIslandVideo('Song Tu Tay')"></div>
@@ -768,6 +783,7 @@
         "da nam": "Da Nam",
         "son ca": "Son Ca",
         "nam yet": "Nam Yet",
+         "da thi": "Da Thi",
         "sinh ton dong": "Sinh Ton Dong", // Check trước Sinh Ton
         "sinh ton": "Sinh Ton",
         "co lin": "Co Lin",
@@ -793,6 +809,7 @@
         "Da Nam": "Đá Nam",
         "Son Ca": "Sơn Ca",
         "Nam Yet": "Nam Yết",
+        "Da Thi": "Đá Thị",
         "Sinh Ton": "Sinh Tồn",
         "Sinh Ton Dong": "Sinh Tồn Đông",
         "Co Lin": "Cô Lin",
@@ -953,7 +970,7 @@
     let isMusicPlaying = false;
     let musicVideoId = null;
 
-    // --- HÀM INIT ĐÃ CẬP NHẬT (LỌC BÀI VIẾT NHẠC) ---
+   // --- HÀM INIT (ĐÃ NÂNG CẤP: TỰ ĐỘNG NHẬN DIỆN NHẠC TỪ CỘT LỚP) ---
     function init(d) {
       if(!d) return err("Không có dữ liệu!");
       
@@ -965,19 +982,29 @@
       let backgroundMusicFound = null; // Biến lưu link nhạc
 
       allPosts.forEach(p => {
-          // 1. KIỂM TRA ĐIỀU KIỆN "ADMIN SET NHẠC" (Dấu chấm)
-          // Nếu Tên = "." và Nội dung = ".", đây là config nhạc, KHÔNG hiện ra feed
-          if (String(p.hoten).trim() === '.' && String(p.noidung).trim() === '.') {
-              if (p.videoLink) backgroundMusicFound = p.videoLink;
-              return; // Bỏ qua, không thêm vào posts
+          // Chuẩn hóa dữ liệu để kiểm tra
+          // Chuyển về chữ thường, không dấu để so sánh chính xác
+          let checkClass = removeVietnameseTones(p.truonglop || "").toLowerCase();
+          
+          // --- 1. KIỂM TRA BÀI ĐĂNG NHẠC (YÊU CẦU MỚI CỦA BẠN) ---
+          // Nếu trong cột Lớp có chữ "nhạc" (ví dụ: "Nhạc nền", "Bài hát", "Nhạc Trường Sa"...)
+          if (checkClass.includes("nhac")) {
+              if (p.videoLink) {
+                  backgroundMusicFound = p.videoLink; // Lưu link video lại
+              }
+              return; // QUAN TRỌNG: Lệnh này giúp bài viết bị "GIẤU", không thêm vào danh sách hiển thị
           }
 
-          let checkStr = removeVietnameseTones(p.truonglop || "");
+          // --- 2. KIỂM TRA CONFIG CŨ (Dấu chấm - Giữ lại để dự phòng) ---
+          if (String(p.hoten).trim() === '.' && String(p.noidung).trim() === '.') {
+              if (p.videoLink) backgroundMusicFound = p.videoLink;
+              return; 
+          }
+
+          // --- 3. KIỂM TRA BÀI VIẾT BẢN ĐỒ (ĐẢO) ---
           let foundIsland = false;
-          
-          // Kiểm tra xem bài viết có phải là "Video Đảo" không
           for (const [keyword, islandKey] of Object.entries(ISLAND_KEYWORDS)) {
-              if (checkStr.includes(keyword)) {
+              if (checkClass.includes(keyword)) {
                   // NẾU LÀ BÀI VIẾT VỀ ĐẢO:
                   islandData[islandKey] = p; 
                   foundIsland = true;
@@ -985,13 +1012,14 @@
               }
           }
           
-          // Chỉ thêm vào danh sách hiển thị chung nếu KHÔNG phải bài viết về đảo
+          // --- 4. CHỈ HIỆN THỊ NẾU KHÔNG PHẢI NHẠC VÀ KHÔNG PHẢI ĐẢO ---
           if (!foundIsland) {
               posts.push(p);
           }
       });
 
       // KÍCH HOẠT NHẠC NỀN NẾU TÌM THẤY
+      // Nếu tìm thấy link nhạc, nó sẽ gọi hàm setupMusicPlayer -> Hàm này sẽ tự hiện nút nhạc trên Menu
       if (backgroundMusicFound) {
           setupMusicPlayer(backgroundMusicFound);
       }
@@ -1001,7 +1029,7 @@
       document.getElementById('stat-provinces').innerText = stats.provinces;
       document.getElementById('stat-views').innerText = new Intl.NumberFormat('vi-VN').format(stats.views);
       
-      // Render Ranking và Feed chỉ dựa trên danh sách 'posts' (đã lọc bỏ đảo)
+      // Render Ranking và Feed
       renderRankings(posts);
       
       let popularPosts = [...posts].sort((a,b) => b.sotim - a.sotim).slice(0, 8); 
@@ -1010,7 +1038,6 @@
       let newestPosts = [...posts].sort((a,b) => parseInt(b.id) - parseInt(a.id)).slice(0, 4);
       render(newestPosts, 'home-newest');
 
-      // Sort cho danh sách "Tất cả"
       let sortedAll = [...posts].sort((a,b) => b.sotim - a.sotim);
       render(sortedAll, 'full-feed');
     }
@@ -1373,28 +1400,71 @@
         } catch (error) { console.error(error); showNotify('Có lỗi xảy ra, vui lòng thử lại!', 'error'); b.innerHTML=old; b.disabled=false; }
     }
     
-    // --- HÀM XỬ LÝ CHẠM VÀO ĐẢO (UPDATED) ---
+   // --- HÀM XỬ LÝ CHẠM VÀO ĐẢO (PHIÊN BẢN ĐỒNG BỘ: LUÔN HIỆN ẢNH CHỦ QUYỀN BÊN NGOÀI) ---
     function openIslandVideo(islandName) {
         const modal = new bootstrap.Modal(document.getElementById('islandVideoModal'));
         const container = document.getElementById('island-video-container');
         const title = document.getElementById('island-video-title');
         const desc = document.getElementById('island-video-desc');
         
-        const data = islandData[islandName];
+        // 1. Lấy dữ liệu đảo
+        const data = islandData[islandName]; 
         const displayName = ISLAND_NAMES_VN[islandName] || islandName;
         
-        if (data && (data.videoLink || data.linkfile)) {
+        // --- ẢNH NỀN CHỦ QUYỀN (Code HTML tạo ảnh cờ đỏ sao vàng) ---
+        const sovereigntyHTML = `
+            <div class="media-box" style="position: relative; overflow: hidden; background: #da251d; cursor: pointer;" onclick="showIslandInfo('${islandName}')">
+                <!-- Ảnh nền mờ -->
+                <img src="https://media.vov.vn/sites/default/files/styles/large/public/2021-04/co_do_sao_vang.jpg" 
+                     style="width:100%; height:100%; object-fit:cover; opacity: 0.4; filter: blur(2px);">
+                
+                <!-- Lớp phủ chữ Khẳng Định Chủ Quyền -->
+                <div style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; display: flex; flex-direction: column; justify-content: center; align-items: center; text-align: center; padding: 20px; z-index: 10;">
+                     
+                     <i class="fas fa-star fa-spin" style="color: #FFFF00; font-size: 2.5rem; margin-bottom: 15px; filter: drop-shadow(0 0 15px rgba(255,255,0,0.8)); animation-duration: 3s;"></i>
+                     
+                     <div style="color: #FFFF00; font-size: 1.4rem; font-weight: 900; text-shadow: 2px 2px 0 #da251d, 0 0 20px rgba(0,0,0,0.5); font-family: 'Montserrat', sans-serif; line-height: 1.4; text-transform: uppercase; letter-spacing: 1px;">
+                        HOÀNG SA - TRƯỜNG SA
+                     </div>
+                     <div style="color: #fff; font-size: 1.8rem; font-weight: 900; text-shadow: 2px 2px 0 #da251d, 0 0 20px rgba(0,0,0,0.5); font-family: 'Playfair Display', serif; text-transform: uppercase;">
+                        LÀ CỦA VIỆT NAM
+                     </div>
+                     
+                     <!-- Thêm nút nhỏ gợi ý bấm vào (chỉ trang trí) -->
+                     <div style="margin-top: 15px; background: rgba(255,255,255,0.2); padding: 5px 15px; border-radius: 20px; color: white; font-size: 0.8rem; backdrop-filter: blur(5px);">
+                        <i class="fas fa-play-circle me-1"></i> Bấm để xem Video & Chi tiết
+                     </div>
+                </div>
+            </div>`;
+
+        if (data) {
+            // --- XỬ LÝ TIÊU ĐỀ ---
+            // Vẫn giữ link click để mở màn hình chi tiết (nơi có video)
             title.innerHTML = `<span style="cursor:pointer; text-decoration:underline; color: var(--primary)" onclick="showIslandInfo('${islandName}')" title="Xem chi tiết">Chạm tay vào đảo: ${displayName} <i class="fas fa-external-link-alt ms-2 small"></i></span>`;
             
-            container.innerHTML = getMedia(data, false);
-            let schoolName = data.truonglop;
+            // --- QUAN TRỌNG: LUÔN HIỆN ẢNH CHỦ QUYỀN (Không load video ở đây nữa) ---
+            container.innerHTML = sovereigntyHTML;
+
+            // --- XỬ LÝ NỘI DUNG LỜI NHẮN ---
+            let schoolName = data.truonglop ? data.truonglop : "Chưa cập nhật trường";
             if (schoolName.includes("-")) { schoolName = schoolName.split("-")[1].trim(); }
-            desc.innerHTML = `<i class="fas fa-university me-2"></i> ${schoolName} <br> <i class="fas fa-user me-2"></i> Người gửi: ${data.hoten}`;
+            
+            let shortMsg = standardizeContent(data.noidung);
+            if(shortMsg.length > 120) shortMsg = shortMsg.substring(0, 120) + "...";
+
+            desc.innerHTML = `
+                <div class="mb-2 fst-italic" style="font-weight: 600; color: #334155;">"${shortMsg}"</div>
+                <div class="text-muted small border-top pt-2 d-flex justify-content-between">
+                    <span><i class="fas fa-university me-1"></i> ${schoolName}</span>
+                    <span class="fw-bold text-primary"><i class="fas fa-user me-1"></i> ${data.hoten}</span>
+                </div>`;
         } else {
-            title.innerText = "Chạm tay vào đảo: " + displayName;
-            container.innerHTML = '<div style="padding: 50px; color: #888;">Chưa có dữ liệu video cho đảo này.</div>';
-            desc.innerHTML = '';
+            // Trường hợp chưa có dữ liệu
+            title.innerText = displayName;
+            container.innerHTML = sovereigntyHTML;
+            desc.innerHTML = '<div class="text-center py-2 text-muted">Chưa có bài viết nào gửi đến đảo này.</div>';
         }
+        
         modal.show();
         
         document.getElementById('islandVideoModal').addEventListener('hidden.bs.modal', function () {
@@ -1440,8 +1510,7 @@
         // 5. Hiển thị màn hình
         show('island-info-screen');
         // Ẩn navbar cho giống full screen trải nghiệm
-        document.getElementById('mainNav').classList.add('hidden');
-    }
+            }
 
     function closeIslandInfo() {
         show('map-screen');
@@ -1468,7 +1537,47 @@
             document.getElementById('music-btn').style.display = 'flex';
         }
     }
+// --- HÀM MỞ MÀN HÌNH CHI TIẾT ĐẢO (ĐÃ SỬA: KHÔNG ẨN MENU) ---
+    function showIslandInfo(islandName) {
+        // 1. Đóng modal hiện tại (nếu có)
+        const modalEl = document.getElementById('islandVideoModal');
+        const modal = bootstrap.Modal.getInstance(modalEl);
+        if(modal) modal.hide();
 
+        // 2. Lấy dữ liệu
+        const data = islandData[islandName];
+        const displayName = ISLAND_NAMES_VN[islandName] || islandName;
+        
+        // Cập nhật ID hiện tại
+        currId = data.id;
+
+        // 3. Điền thông tin
+        document.getElementById('info-big-title').innerText = "ĐẢO " + displayName.toUpperCase();
+        document.getElementById('info-video-title').innerText = "Chạm tay vào đảo: " + displayName;
+        
+        // Video
+        document.getElementById('info-video-container').innerHTML = getMedia(data, false);
+        
+        // Mô tả người gửi
+        let schoolName = data.truonglop;
+        if (schoolName.includes("-")) { schoolName = schoolName.split("-")[1].trim(); }
+        document.getElementById('info-video-desc').innerHTML = `
+            <i class="fas fa-university me-2"></i> ${schoolName} <br> 
+            <i class="fas fa-user me-2"></i> Người gửi: ${data.hoten}`;
+
+        // Nội dung
+        let contentText = standardizeContent(data.noidung);
+        document.getElementById('info-text-content').innerHTML = contentText;
+
+        // 4. Load bình luận
+        loadCmt(data.id, 'info-cmt-list');
+
+        // 5. Hiển thị màn hình
+        show('island-info-screen');
+        
+        // --- QUAN TRỌNG: Đã XÓA dòng lệnh ẩn Navbar ở đây ---
+        // Navbar sẽ vẫn hiển thị bình thường
+    }
     // Hàm gọi lại bắt buộc của YouTube API
     function onYouTubeIframeAPIReady() {
         if(!musicVideoId) return;
